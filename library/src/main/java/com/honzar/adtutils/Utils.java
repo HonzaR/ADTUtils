@@ -1,6 +1,7 @@
 package com.honzar.adtutils;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -144,11 +145,11 @@ public class Utils {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-//    public static boolean checkBluetoothEnabled()
-//    {
-//        final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-//        return (bluetoothAdapter != null && bluetoothAdapter.isEnabled());
-//    }
+    public static boolean checkBluetoothEnabled()
+    {
+        final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        return (bluetoothAdapter != null && bluetoothAdapter.isEnabled());
+    }
 
     public static boolean checkLocationEnabled(Context context)
     {
@@ -175,34 +176,6 @@ public class Utils {
         Intent testIntent = new Intent(Intent.ACTION_VIEW);
         testIntent.setType("application/pdf");
         return (packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0);
-    }
-
-    public static void showNoInternetConnectionToast(Context context)
-    {
-        Toast.makeText(context, context.getString(R.string.err_no_internet_connection), Toast.LENGTH_LONG).show();
-    }
-
-    public static void showNoBluetoothConnectionToast(Context context)
-    {
-        Toast.makeText(context, "error", Toast.LENGTH_LONG).show();
-    }
-
-    public static void addOnGlobalLayoutCalledOnce(final View view, final ViewTreeObserver.OnGlobalLayoutListener l)
-    {
-
-        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                ViewTreeObserver vto = view.getViewTreeObserver();
-                if (vto != null && vto.isAlive()) {
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN)
-                        vto.removeGlobalOnLayoutListener(this);
-                    else
-                        vto.removeOnGlobalLayoutListener(this);
-                }
-                l.onGlobalLayout();
-            }
-        });
     }
 
     public static boolean stringEquality(String s1, String s2) {
@@ -1655,36 +1628,11 @@ public class Utils {
         return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
-    public static void pickImageFromGallery(Activity a, int resultCode)
-    {
-        Intent i = new Intent();
-        i.setType("image/*");
-        i.setAction(Intent.ACTION_GET_CONTENT);
-        a.startActivityForResult(Intent.createChooser(i, "Select Picture"), resultCode);
-    }
-
     public static byte[] getByteArrayFromBitmap(Bitmap bitmap)
     {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         return stream.toByteArray();
-    }
-
-    public static void openCalendar(Context context, DateTime startsAt, DateTime endsAt, String title)
-    {
-        Intent intent = new Intent(Intent.ACTION_INSERT)
-                .setData(CalendarContract.Events.CONTENT_URI)
-                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startsAt.getMillis())
-                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endsAt.getMillis())
-                .putExtra(CalendarContract.Events.TITLE, title)
-                .putExtra(CalendarContract.Events.DESCRIPTION, title)
-                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
-        try {
-            context.startActivity(intent);
-        } catch (Exception e) {
-            Toast.makeText(context, context.getString(R.string.err_calendar_open), Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
     }
 
     public static long kBToMB(long kilobytes)
@@ -1700,35 +1648,6 @@ public class Utils {
     public static String getFilesPrefix()
     {
         return isThisDeviceNougatAndHigher() ? "content://" : "file://";
-    }
-
-    public static void facebookSignOut()
-    {
-        if (AccessToken.getCurrentAccessToken() == null) {
-            return; // already logged out
-        }
-
-        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
-                .Callback() {
-            @Override
-            public void onCompleted(GraphResponse graphResponse) {
-                LoginManager.getInstance().logOut();
-
-            }
-        }).executeAsync();
-    }
-
-    public static void openPhoneCallInExternalApp(Context context, String tel)
-    {
-        try {
-            final Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_DIAL);
-            sendIntent.setData(Uri.fromParts("tel", tel, null));
-            context.startActivity(sendIntent);
-        } catch (Exception e) {
-            Toast.makeText(context, context.getString(R.string.err_phone_open), Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
     }
 
     public static void addPhotoToGallery(Context context, String photoUrl)

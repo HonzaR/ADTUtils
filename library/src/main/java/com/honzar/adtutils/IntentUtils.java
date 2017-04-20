@@ -1,18 +1,23 @@
 package com.honzar.adtutils;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.Build;
+import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.content.FileProvider;
 import android.util.Patterns;
+import android.widget.Toast;
 
 import java.io.File;
+
+import javax.xml.validation.Schema;
 
 /**
  * Created by Honza Rychnovský on 19.4.2017.
@@ -23,7 +28,11 @@ import java.io.File;
 public class IntentUtils {
 
 
-    public static boolean openEmailInExternalApp(Context context, String emailAddress, String subject, String text, String chooserTitle)
+    //
+    // OPEN EXTERNAL APP
+    //
+
+    public static boolean openEmailApp(Context context, String emailAddress, String subject, String text, String chooserTitle)
     {
         if (context == null || emailAddress == null || emailAddress.isEmpty()) {
             return false;
@@ -51,7 +60,7 @@ public class IntentUtils {
         }
     }
 
-    public static boolean openUrlInExternalApp(Context context, String url)
+    public static boolean openBrowserApp(Context context, String url)
     {
         if (context == null || url == null || !url.isEmpty()) {
             return false;
@@ -70,7 +79,7 @@ public class IntentUtils {
         }
     }
 
-    public static boolean openPdfInExternalApp(Context context, String documentPath, String chooserTitle)
+    public static boolean openPdfApp(Context context, String documentPath, String chooserTitle)
     {
         if (context == null || documentPath == null || documentPath.isEmpty()) {
             return false;
@@ -84,11 +93,11 @@ public class IntentUtils {
             }
 
             try {
-                Intent target = new Intent(Intent.ACTION_VIEW);
-                target.setDataAndType(Uri.fromFile(file), "application/pdf");
-                target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
-                Intent intent = Intent.createChooser(target, chooserTitle);
+                intent = Intent.createChooser(intent, chooserTitle);
                 context.startActivity(intent);
                 return true;
 
@@ -100,7 +109,7 @@ public class IntentUtils {
         }
     }
 
-    public static boolean openNavigationInExternalApp(Context context, String intentString)
+    public static boolean openNavigationApp(Context context, String intentString)
     {
         if (context == null || intentString == null || intentString.isEmpty()) {
             return false;
@@ -118,7 +127,7 @@ public class IntentUtils {
         }
     }
 
-    public static boolean openPhotoExternalApp(Context context, int requestCode, boolean frontCamera, File outputFile)
+    public static boolean openCameraApp(Context context, int requestCode, boolean frontCamera, File outputFile)
     {
         if (context == null || outputFile == null) {
             return false;
@@ -156,6 +165,125 @@ public class IntentUtils {
         return false;
     }
 
+    public static boolean openCalendarApp(Context context, long startsAt, long endsAt, String title, String description)
+    {
+        if (context == null) {
+            return false;
+        }
+
+        if (startsAt < 0 && endsAt < 0) {
+            return false;
+        }
+
+        Intent intent = new Intent(Intent.ACTION_INSERT)
+                .setData(CalendarContract.Events.CONTENT_URI)
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startsAt)
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endsAt)
+                .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+        if (title != null)
+            intent.putExtra(CalendarContract.Events.TITLE, title);
+        if (description != null)
+            intent.putExtra(CalendarContract.Events.DESCRIPTION, description);
+
+        try {
+            context.startActivity(intent);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean openPhoneCallApp(Context context, String phoneNumber)
+    {
+        if (context == null || phoneNumber == null || phoneNumber.isEmpty()) {
+            return  false;
+        }
+
+        if (!Patterns.PHONE.matcher(phoneNumber).matches()) {
+            return false;
+        }
+
+        try {
+            final Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_DIAL);
+            sendIntent.setData(Uri.fromParts("tel", phoneNumber, null));
+            context.startActivity(sendIntent);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean openGalleryPickImageApp(Context context, String chooserTitle, int resultCode)
+    {
+        if (context == null) {
+            return false;
+        }
+
+        try {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent = Intent.createChooser(intent, chooserTitle);
+            ((Activity) context).startActivityForResult(intent, resultCode);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean openGalleryApp(Context context, Uri uri)
+    {
+        if (context == null || uri == null || uri.toString().isEmpty()) {
+            return false;
+        }
+
+        if (Utils.canDisplayImage(context)) {
+
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(uri, "image/*");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
+                context.startActivity(intent);
+                return true;
+
+            } catch (Exception e) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean openGalleryApp(Context context, String url)
+    {
+        if (context == null || url == null || url.isEmpty()) {
+            return false;
+        }
+
+        return openGalleryApp(context, Uri.parse(url));
+    }
+
+    public static boolean openImageInExternalApp(Context context, File file)
+    {
+        if (context == null || file == null) {
+            return false;
+        }
+
+        if (!file.canRead() || !file.exists() || !file.isFile()) {
+            return false;
+        }
+
+        return openGalleryApp(context, Uri.parse("file://" + file.getAbsolutePath()));
+    }
+
+
+
+    //
+    // TURN DEVICE ACCESSORIES ON
+    //
+
     public static boolean turnNfcOn(Context context)
     {
         if (context == null) {
@@ -191,65 +319,22 @@ public class IntentUtils {
         }
     }
 
-
-
-
-
-
-
-    public static void openImageInExternalApp(Context c, String url)
+    public static boolean turnBluetoothOn(Context context, int requestCode)
     {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri data = Uri.parse(url);
-        intent.setDataAndType(data, "image/*");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-
-        if (canDisplayImage(c)) {
-            try {
-                c.startActivity(intent);
-            } catch (Exception e) {
-                Toast.makeText(c, c.getString(R.string.err_file_cannot_be_opened), Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
-        } else {
-            Toast.makeText(c, c.getString(R.string.err_file_cannot_be_opened), Toast.LENGTH_SHORT).show();
+        if (context == null) {
+            return false;
         }
-    }
 
-    public static void openImageInExternalApp(Context c, Uri data)
-    {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(data, "image/*");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-
-        if (canDisplayImage(c)) {
-            try {
-                c.startActivity(intent);
-            } catch (Exception e) {
-                Toast.makeText(c, c.getString(R.string.err_file_cannot_be_opened), Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
-        } else {
-            Toast.makeText(c, c.getString(R.string.err_file_cannot_be_opened), Toast.LENGTH_SHORT).show();
+        if (Utils.checkBluetoothEnabled()) {
+            return true;
         }
-    }
 
-    public static void openImageInExternalApp(Context c, File file)
-    {
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri data = Uri.parse("file://" + file.getAbsolutePath());
-        intent.setDataAndType(data, "image/*");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-
-        if (canDisplayImage(c)) {
-            try {
-                c.startActivity(intent);
-            } catch (Exception e) {
-                Toast.makeText(c, c.getString(R.string.err_file_cannot_be_opened), Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
-        } else {
-            Toast.makeText(c, c.getString(R.string.err_file_cannot_be_opened), Toast.LENGTH_SHORT).show();
+        try {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            ((Activity)context).startActivityForResult(enableBtIntent, requestCode);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 }
