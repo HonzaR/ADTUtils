@@ -1,9 +1,10 @@
-package com.honzar.adtutils;
+package com.honzar.adtutils.library;
 
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 
+import java.text.Normalizer;
 import java.util.List;
 
 /**
@@ -77,5 +78,12 @@ public class StringUtils {
         SpannableString content = new SpannableString(text);
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         return content;
+    }
+
+    public static String removeAccents(String s)
+    {
+        s = Normalizer.normalize(s, Normalizer.Form.NFD);
+        s = s.replaceAll("[^\\p{ASCII}]", "");
+        return s;
     }
 }

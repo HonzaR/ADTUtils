@@ -1,10 +1,9 @@
-package com.honzar.adtutils;
+package com.honzar.adtutils.library;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.Build;
@@ -13,11 +12,8 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.content.FileProvider;
 import android.util.Patterns;
-import android.widget.Toast;
 
 import java.io.File;
-
-import javax.xml.validation.Schema;
 
 /**
  * Created by Honza Rychnovský on 19.4.2017.

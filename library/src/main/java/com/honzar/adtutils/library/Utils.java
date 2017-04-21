@@ -1,4 +1,4 @@
-package com.honzar.adtutils;
+package com.honzar.adtutils.library;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -25,11 +25,9 @@ import android.nfc.NfcAdapter;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
-import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -40,27 +38,10 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
-import com.facebook.login.LoginManager;
 import com.google.gson.Gson;
-import com.svetzdravi.activity.LoginActivity;
-import com.svetzdravi.activity.base.BaseActivity;
-import com.svetzdravi.activity.base.BaseActivityWithDrawer;
-
-import org.joda.time.DateTime;
-import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

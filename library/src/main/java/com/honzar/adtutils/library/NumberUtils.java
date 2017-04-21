@@ -1,4 +1,4 @@
-package com.honzar.adtutils;
+package com.honzar.adtutils.library;
 
 import java.text.DecimalFormat;
 
