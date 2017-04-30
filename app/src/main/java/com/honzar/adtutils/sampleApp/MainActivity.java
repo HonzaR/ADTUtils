@@ -4,7 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.gson.JsonObject;
-import com.honzar.adtutils.library.JsonUtils;
+import com.honzar.adtutils.library.*;
+import com.honzar.adtutils.library.BuildConfig;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,5 +15,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         boolean b = JsonUtils.getBoolean(new JsonObject(), "test");
+
+        LogUtils.d(com.honzar.adtutils.sampleApp.BuildConfig.DEBUG, MainActivity.class.getName(), Byte.parseByte("fff", 2));
     }
 }
