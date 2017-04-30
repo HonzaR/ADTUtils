@@ -14,16 +14,19 @@ import java.math.BigInteger;
 
 public class JsonUtils {
 
-
-    private static boolean checkParams(JsonObject json, String key)
-    {
-        return (json != null && key != null && !json.isJsonNull() && json.get(key) != null);
-    }
-
     //
     // NOT NULL METHODS
     //
 
+    /**
+     * Returns JsonObject under the key or fallback in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched JsonObject
+     * @param fallback - fallback is returned in case of any error
+     *
+     * @return JsonObject
+     */
     public static JsonObject optJsonObjectNotNull(JsonObject json, String key, JsonObject fallback) {
         try {
             return checkParams(json, key) ? json.get(key).getAsJsonObject() : fallback;
@@ -32,6 +35,15 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns JsonArray under the key or fallback in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched JsonArray
+     * @param fallback - fallback is returned in case of any error
+     *
+     * @return JsonArray
+     */
     public static JsonArray optJsonArrayNotNull(JsonObject json, String key, JsonArray fallback) {
         try {
             return checkParams(json, key) ? json.get(key).getAsJsonArray() : fallback;
@@ -40,6 +52,15 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns String under the key or fallback in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched String
+     * @param fallback - fallback is returned in case of any error
+     *
+     * @return String
+     */
     public static String optStringNotNull(JsonObject json, String key, String fallback) {
         try {
             return checkParams(json, key) ? json.get(key).getAsString() : fallback;
@@ -48,6 +69,15 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns char under the key or fallback in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched char
+     * @param fallback - fallback is returned in case of any error
+     *
+     * @return char
+     */
     public static char optCharNotNull(JsonObject json, String key, char fallback) {
         try {
             return checkParams(json, key) ? json.get(key).getAsCharacter() : fallback;
@@ -56,6 +86,15 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns boolean under the key or fallback in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched boolean
+     * @param fallback - fallback is returned in case of any error
+     *
+     * @return boolean
+     */
     public static boolean optBooleanNotNull(JsonObject json, String key, boolean fallback) {
         try {
             return checkParams(json, key) ? json.get(key).getAsBoolean() : fallback;
@@ -64,6 +103,15 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns BigDecimal under the key or fallback in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched BigDecimal
+     * @param fallback - fallback is returned in case of any error
+     *
+     * @return BigDecimal
+     */
     public static BigDecimal optBigDecimalNotNull(JsonObject json, String key, BigDecimal fallback) {
         try {
             return checkParams(json, key) ? json.get(key).getAsBigDecimal() : fallback;
@@ -72,6 +120,15 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns BigInteger under the key or fallback in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched BigInteger
+     * @param fallback - fallback is returned in case of any error
+     *
+     * @return BigInteger
+     */
     public static BigInteger optBigIntegerNotNull(JsonObject json, String key, BigInteger fallback) {
         try {
             return checkParams(json, key) ? json.get(key).getAsBigInteger() : fallback;
@@ -80,6 +137,15 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns byte under the key or fallback in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched byte
+     * @param fallback - fallback is returned in case of any error
+     *
+     * @return byte
+     */
     public static byte optByteNotNull(JsonObject json, String key, byte fallback) {
         try {
             return checkParams(json, key) ? json.get(key).getAsByte() : fallback;
@@ -88,6 +154,15 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns short under the key or fallback in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched short
+     * @param fallback - fallback is returned in case of any error
+     *
+     * @return short
+     */
     public static short optShortNotNull(JsonObject json, String key, short fallback) {
         try {
             return checkParams(json, key) ? json.get(key).getAsShort() : fallback;
@@ -96,6 +171,15 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns int under the key or fallback in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched int
+     * @param fallback - fallback is returned in case of any error
+     *
+     * @return int
+     */
     public static int optIntNotNull(JsonObject json, String key, int fallback) {
         try {
             return checkParams(json, key) ? json.get(key).getAsInt() : fallback;
@@ -104,6 +188,15 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns long under the key or fallback in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched long
+     * @param fallback - fallback is returned in case of any error
+     *
+     * @return long
+     */
     public static long optLongNotNull(JsonObject json, String key, long fallback) {
         try {
             return checkParams(json, key) ? json.get(key).getAsLong() : fallback;
@@ -112,6 +205,15 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns float under the key or fallback in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched float
+     * @param fallback - fallback is returned in case of any error
+     *
+     * @return float
+     */
     public static float optFloatNotNull(JsonObject json, String key, float fallback) {
         try {
             return checkParams(json, key) ? json.get(key).getAsFloat() : fallback;
@@ -120,6 +222,15 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns double under the key or fallback in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched double
+     * @param fallback - fallback is returned in case of any error
+     *
+     * @return double
+     */
     public static double optDoubleNotNull(JsonObject json, String key, double fallback) {
         try {
             return checkParams(json, key) ? json.get(key).getAsDouble() : fallback;
@@ -132,6 +243,14 @@ public class JsonUtils {
     // NULLABLE METHODS
     //
 
+    /**
+     * Returns JsonObject or null in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched object
+     *
+     * @return JsonObject
+     */
     public static JsonObject getJsonObject(JsonObject json, String key) {
         try {
             return json.get(key) == null || json.get(key).isJsonNull() ? null : json.get(key).getAsJsonObject();
@@ -140,6 +259,14 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns JsonArray or null in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched object
+     *
+     * @return JsonArray
+     */
     public static JsonArray getJsonArray(JsonObject json, String key) {
         try {
             return json.get(key) == null ? null : json.get(key).getAsJsonArray();
@@ -148,6 +275,14 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns String or null in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched object
+     *
+     * @return JsonString
+     */
     public static String getString(JsonObject json, String key) {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsString());
@@ -156,6 +291,14 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns Character or null in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched object
+     *
+     * @return Character
+     */
     public static Character getChar(JsonObject json, String key) {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsCharacter());
@@ -164,6 +307,14 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns Boolean or null in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched object
+     *
+     * @return Boolean
+     */
     public static Boolean getBoolean(JsonObject json, String key) {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsBoolean());
@@ -172,6 +323,14 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns BigDecimal or null in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched object
+     *
+     * @return BigDecimal
+     */
     public static BigDecimal getBigDecimal(JsonObject json, String key) {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsBigDecimal());
@@ -180,6 +339,14 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns BigInteger or null in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched object
+     *
+     * @return BigInteger
+     */
     public static BigInteger getBigInteger(JsonObject json, String key) {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsBigInteger());
@@ -188,6 +355,14 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns Byte or null in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched object
+     *
+     * @return Byte
+     */
     public static Byte getByte(JsonObject json, String key) {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsByte());
@@ -196,6 +371,14 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns Short or null in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched object
+     *
+     * @return Short
+     */
     public static Short getShort(JsonObject json, String key) {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsShort());
@@ -204,6 +387,14 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns Integer or null in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched object
+     *
+     * @return Integer
+     */
     public static Integer getInt(JsonObject json, String key) {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsInt());
@@ -212,6 +403,14 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns Long or null in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched object
+     *
+     * @return Long
+     */
     public static Long getLong(JsonObject json, String key) {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsLong());
@@ -220,6 +419,14 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns Float or null in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched object
+     *
+     * @return Float
+     */
     public static Float getFloat(JsonObject json, String key) {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsFloat());
@@ -228,6 +435,14 @@ public class JsonUtils {
         }
     }
 
+    /**
+     * Returns Double or null in case of error.
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched object
+     *
+     * @return Double
+     */
     public static Double getDouble(JsonObject json, String key) {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsDouble());
@@ -236,5 +451,11 @@ public class JsonUtils {
         }
     }
 
+    // PRIVATE METHODS
+
+    private static boolean checkParams(JsonObject json, String key)
+    {
+        return (json != null && key != null && !json.isJsonNull() && json.get(key) != null);
+    }
 
 }
