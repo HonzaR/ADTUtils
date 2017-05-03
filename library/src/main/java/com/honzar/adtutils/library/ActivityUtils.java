@@ -11,6 +11,7 @@ import android.os.Parcelable;
  */
 
 public class ActivityUtils {
+    
     private static final String ACTIVITY_RESULT_PARCELABLE = ActivityUtils.class.getName() + "." + "ACTIVITY_RESULT_PARCELABLE";
 
     public static void setResultParcelable(Activity activity, int resultCode, Parcelable data) {

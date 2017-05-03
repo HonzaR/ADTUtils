@@ -209,12 +209,24 @@ public class Utils {
         return enabled;
     }
 
-    public static boolean canDisplayPdf(Context context)
+    public static boolean checkCanDisplayPdf(Context context)
     {
         PackageManager packageManager = context.getPackageManager();
         Intent testIntent = new Intent(Intent.ACTION_VIEW);
         testIntent.setType("application/pdf");
         return (packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0);
+    }
+
+    public static boolean checkCanDisplayImage(Context context)
+    {
+        PackageManager packageManager = context.getPackageManager();
+        Intent testIntent = new Intent(Intent.ACTION_VIEW);
+        testIntent.setType("image/*");
+        if (packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static int getActualDistance(Location locationA, Location locationB)
@@ -428,40 +440,6 @@ public class Utils {
         }
     }
 
-    //
-
-
-
-    public static String getAndroidVersion()
-    {
-        return Build.VERSION.RELEASE;
-    }
-
-
-    public String changeAppVersionInHtml(Context context, String file) {
-        StringBuilder contentBuilder = new StringBuilder();
-        try {
-            BufferedReader in = new BufferedReader(new InputStreamReader(context.getAssets().open(file)));
-            String str;
-            while ((str = in.readLine()) != null) {
-                contentBuilder.append(str);
-            }
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        PackageInfo pInfo = null;
-        try {
-            pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        String newContent = contentBuilder.toString().replace("^version_number^", pInfo.versionName);
-        return newContent;
-    }
-
     public static String getStringFromLocalHtml(String filePath)
     {
         StringBuilder contentBuilder = new StringBuilder();
@@ -481,91 +459,6 @@ public class Utils {
         }
 
         return contentBuilder.toString();
-    }
-
-
-    public static String getReadableDeviceName()
-    {
-        String manufacturer = Build.MANUFACTURER;
-        String model = Build.MODEL;
-        if (model.startsWith(manufacturer)) {
-            return getFirstWordCapitalized(model);
-        } else {
-            return getFirstWordCapitalized(manufacturer) + " " + model;
-        }
-    }
-
-    public static int getAppVersionBuild(Context context)
-    {
-        if (versionCode != Integer.MIN_VALUE)
-            return versionCode;
-        else {
-            try {
-                return versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
-            }
-            catch (PackageManager.NameNotFoundException e) {
-                return versionCode = 1;
-            }
-        }
-    }
-
-    public static String getAppVersionName(Context context)
-    {
-        try {
-            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
-    public static int getAppVersionCode(Context context)
-    {
-        try {
-            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
-        }
-        catch (PackageManager.NameNotFoundException e) {
-            return 1;
-        }
-    }
-
-    /**
-     * Funkce vrati verzi aplikace bez postfixu typu beta1, RC3 "-debug" apod. - tzn. jen napr. 2.0.0
-     * @param context
-     * @return
-     */
-    public static String getAppVersionNameWithoutPostfix(Context context) {
-        try {
-            String ret = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-
-            int ind = ret.indexOf(' ');
-            if (ind >= 0)
-                ret = ret.substring(0, ind);
-
-            ind = ret.indexOf('-');
-            if (ind >= 0)
-                ret = ret.substring(0, ind);
-
-            return ret;
-        }
-        catch (PackageManager.NameNotFoundException e) {
-            return "err";
-        }
-    }
-
-    public static String getModelName() {
-        try {
-            String manufacturer = Build.MANUFACTURER;
-            String model = Build.MODEL;
-            if (model.startsWith(manufacturer)) {
-                return capitalize(model);
-            } else {
-                return capitalize(manufacturer) + " " + model;
-            }
-        }
-        catch (Exception ex) {
-            return "err";
-        }
     }
 
 
@@ -660,20 +553,7 @@ public class Utils {
         return UUID.randomUUID().toString().toUpperCase();
     }
 
-    public static boolean isThisDeviceMarshmallow()
-    {
-        return Build.VERSION.SDK_INT == Build.VERSION_CODES.M;
-    }
 
-    public static boolean isThisDeviceNougatAndHigher()
-    {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
-    }
-
-    public static int getDeviceSDKVersion()
-    {
-        return Build.VERSION.SDK_INT;
-    }
 
     public static String[] getListOfAssetFiles(Context context, String path)
     {
@@ -1129,11 +1009,6 @@ public class Utils {
         return availableSpace;
     }
 
-//    public static void showNfcNotSupportedToast(Context mContext)
-//    {
-//        Toast.makeText(mContext, mContext.getString(R.string.err_nfc_not_supported), Toast.LENGTH_LONG).show();
-//    }
-
     public static boolean loadAndScaleDownAndSaveImage(String localPhotoUrl, int maxSideSize)
     {
         boolean result = false;
@@ -1221,17 +1096,7 @@ public class Utils {
 
     //// OPEN IMAGE
 
-    public static boolean canDisplayImage(Context context)
-    {
-        PackageManager packageManager = context.getPackageManager();
-        Intent testIntent = new Intent(Intent.ACTION_VIEW);
-        testIntent.setType("image/*");
-        if (packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+
 
     ////
 
@@ -1391,11 +1256,6 @@ public class Utils {
         }
         return hashtext;
         //return Base64.encodeToString(thedigest, Base64.DEFAULT);
-    }
-
-    public static boolean isTablet(Context context)
-    {
-        return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
     public static byte[] getByteArrayFromBitmap(Bitmap bitmap)

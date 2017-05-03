@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 
 public class FragmentUtils {
+
     private static final String BUNDLE_SINGLE_ARG_PARCELABLE = FragmentUtils.class.getName() + ".SINGLE_ARG_PACELABLE";
 
     private static final String NESTED_FRAGMENT_TAG_DELIMITER = "|||";

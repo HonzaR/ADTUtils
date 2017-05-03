@@ -114,7 +114,7 @@ public class IntentUtils {
             return false;
         }
 
-        if (Utils.canDisplayPdf(context)) {
+        if (Utils.checkCanDisplayPdf(context)) {
 
             File file = new File(documentPath);
             if (!file.isAbsolute()) {
@@ -321,7 +321,7 @@ public class IntentUtils {
             return false;
         }
 
-        if (Utils.canDisplayImage(context)) {
+        if (Utils.checkCanDisplayImage(context)) {
 
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
