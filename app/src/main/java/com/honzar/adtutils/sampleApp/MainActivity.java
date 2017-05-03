@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.google.gson.JsonObject;
 import com.honzar.adtutils.library.*;
-import com.honzar.adtutils.library.BuildConfig;
 
 public class MainActivity extends AppCompatActivity {
 
