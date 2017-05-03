@@ -166,177 +166,55 @@ public class Utils {
         }
     }
 
+    public static boolean checkDeviceHasBackCamera(Context context)
+    {
+        PackageManager pm = context.getPackageManager();
+
+        if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean checkDeviceHasAnyCamera(Context context)
+    {
+        if (Build.VERSION.SDK_INT < 21) {
+            return Camera.getNumberOfCameras() > 0;
+        } else {
+            return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
+        }
+    }
+
+    public static boolean checkNfcSupported(Context context)
+    {
+        NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(context);
+
+        if (nfcAdapter != null) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean checkNfcEnabled(Context context)
+    {
+        NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(context);
+        boolean enabled = false;
+
+        if (nfcAdapter != null) {
+            enabled = nfcAdapter.isEnabled();
+        }
+
+        return enabled;
+    }
+
     public static boolean canDisplayPdf(Context context)
     {
         PackageManager packageManager = context.getPackageManager();
         Intent testIntent = new Intent(Intent.ACTION_VIEW);
         testIntent.setType("application/pdf");
         return (packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0);
-    }
-
-    public static boolean stringEquality(String s1, String s2) {
-        if (s1 == null && s2 == null) return true;
-        if (s1 == null) return false;
-        if (s2 == null) return false;
-
-        return s1.equals(s2);
-    }
-
-    public static boolean listEquals(ArrayList<?> first, ArrayList<?> second)
-    {
-        if (first == second) return true;
-        if (first == null) return false;
-        if (second == null) return false;
-
-        if (first.size() != second.size()) {
-            return false;
-        }
-        for (int i = 0; i < first.size(); i++) {
-            if (!first.get(i).equals(second.get(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static boolean integerEquality(Integer i1, Integer i2) {
-        if (i1 == null && i2 == null) return true;
-        if (i1 == null) return false;
-        if (i2 == null) return false;
-
-        return i1.intValue() == i2.intValue();
-    }
-
-    public static boolean longEquality(Long l1, Long l2) {
-        if (l1 == null && l2 == null) return true;
-        if (l1 == null) return false;
-        if (l2 == null) return false;
-
-        return l1.longValue() == l2.longValue();
-    }
-
-    public static boolean integesrEquality(Integer[] is1, Integer[] is2) {
-        if (is1 == null && is2 == null) return true;
-        if (is1 == null) return false;
-        if (is2 == null) return false;
-
-        return Arrays.equals(is1, is2);
-    }
-
-    public static boolean floatEquality(Float i1, Float i2) {
-        if (i1 == null && i2 == null) return true;
-        if (i1 == null) return false;
-        if (i2 == null) return false;
-
-        return i1.floatValue() == i2.floatValue();
-    }
-
-//    public static boolean boundsEquality(Object o1, Object o2) {
-//        if (o1 == o2) return true;
-//        if (o1 == null) return false;
-//        if (o2 == null) return false;
-//
-//        LatLngBounds bounds1 = (LatLngBounds) o1;
-//        LatLngBounds bounds2 = (LatLngBounds) o2;
-//
-//        if (bounds1.southwest.latitude != bounds2.southwest.latitude)
-//            return false;
-//        if (bounds1.southwest.longitude != bounds2.southwest.longitude)
-//            return false;
-//        if (bounds1.northeast.latitude != bounds2.northeast.latitude)
-//            return false;
-//        if (bounds1.northeast.longitude != bounds2.northeast.longitude)
-//            return false;
-//        return true;
-//
-//    }
-
-    public static boolean locationEquality(Location first, Location second)
-    {
-        if (first == second) return true;
-        if (first == null) return false;
-        if (second == null) return false;
-
-        return first.getLatitude() == second.getLatitude() && first.getLongitude() == second.getLongitude();
-    }
-
-    public static boolean currLocaleEquality(String s1, String s2)
-    {
-        if (s1 == null && s2 == null) return true;
-        if (s1 == null) return false;
-        if (s2 == null) return false;
-
-        return s1.equals(s2);
-    }
-
-    public static int resolveUsableScreenHeight(Context context)
-    {
-        BaseActivityWithDrawer activity = (BaseActivityWithDrawer) context;
-        final int actionBarHeight = activity.getSupportActionBar().getHeight();
-        final int resourceStatusBar = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        final int statusBarHeight = activity.getResources().getDimensionPixelSize(resourceStatusBar);
-        final int resourceNavBar = activity.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
-        final int navigationBarHeight = activity.getResources().getDimensionPixelSize(resourceNavBar);
-
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        final int screenHeight = size.y;
-
-        return (screenHeight - actionBarHeight - statusBarHeight - navigationBarHeight);
-    }
-
-    public static int resolveScreenWidth(Activity activity)
-    {
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        return size.x;
-    }
-
-    public static int resolveScreenHeight(Activity activity)
-    {
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        return size.y;
-    }
-
-    public static int resolveScreenHeightWholle(Activity activity)
-    {
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-
-        final int screen = size.y;
-        final int resourceNavBar = activity.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
-        final int navigationBarHeight = activity.getResources().getDimensionPixelSize(resourceNavBar);
-
-        return screen + navigationBarHeight;
-    }
-
-    public static int resolveScreenOrientation(Activity activity)
-    {
-        Display getOrient = activity.getWindowManager().getDefaultDisplay();
-        int orientation = Configuration.ORIENTATION_UNDEFINED;
-        if(getOrient.getWidth() == getOrient.getHeight()){
-            orientation = Configuration.ORIENTATION_SQUARE;
-        } else{
-            if(getOrient.getWidth() < getOrient.getHeight()){
-                orientation = Configuration.ORIENTATION_PORTRAIT;
-            }else {
-                orientation = Configuration.ORIENTATION_LANDSCAPE;
-            }
-        }
-        return orientation;
-    }
-
-    public static void screenNotTouchable(Activity activity, boolean set) {
-        if (set) {
-            activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        } else {
-            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        }
     }
 
     public static int getActualDistance(Location locationA, Location locationB)
@@ -552,41 +430,7 @@ public class Utils {
 
     //
 
-    public static float getDpForDensityFloat(int pixels, Context context)
-    {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pixels, context.getResources().getDisplayMetrics());
-    }
 
-    public static int getDpForDensityInt(int pixels, Context context)
-    {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pixels, context.getResources().getDisplayMetrics());
-    }
-
-    public static float getDpForDensity(float pixels, Context context)
-    {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pixels, context.getResources().getDisplayMetrics());
-    }
-
-    public static float getSpForDensity(float pixels, Context context)
-    {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, pixels, context.getResources().getDisplayMetrics());
-    }
-
-    public static int getSpForDensityInt(int pixels, Context context)
-    {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, pixels, context.getResources().getDisplayMetrics());
-    }
-
-    /**
-     * Converts DP values to Pixel.
-     *
-     * @param dp
-     * @return
-     */
-    public static int dpToPx(int dp)
-    {
-        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
-    }
 
     public static String getAndroidVersion()
     {
@@ -1143,21 +987,7 @@ public class Utils {
         }
     }
 
-    public static void showSoftKeyboard(View currentFocus)
-    {
-        if (currentFocus != null) {
-            InputMethodManager imm = (InputMethodManager) currentFocus.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(currentFocus, InputMethodManager.SHOW_IMPLICIT);
-        }
-    }
 
-    public static void hideSoftKeyboard(View currentFocus)
-    {
-        if (currentFocus != null) {
-            InputMethodManager imm = (InputMethodManager)currentFocus.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
-        }
-    }
 
     public static File getAppDataExternalDirectory(Context c, String directory) {
 
@@ -1176,22 +1006,7 @@ public class Utils {
     }
 
 
-    public static void enableOrDisableViewGroup(ViewGroup group, boolean state)
-    {
-        group.setEnabled(state);
 
-        for (int i = 0; i < group.getChildCount(); i++)
-        {
-            View child = group.getChildAt(i);
-
-            if (child instanceof ViewGroup)
-            {
-                enableOrDisableViewGroup((ViewGroup) child, state);
-            } else {
-                child.setEnabled(state);
-            }
-        }
-    }
 
     public static double roundDouble(double value, int places)
     {
@@ -1231,25 +1046,7 @@ public class Utils {
         return new String(c);
     }
 
-    public static boolean checkDeviceHasBackCamera(Context context)
-    {
-        PackageManager pm = context.getPackageManager();
 
-        if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public static boolean checkDeviceHasAnyCamera(Context context)
-    {
-        if (Build.VERSION.SDK_INT < 21) {
-            return Camera.getNumberOfCameras() > 0;
-        } else {
-            return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
-        }
-    }
 
     public static int getRandomColor(Context context, long i)
     {
@@ -1330,29 +1127,6 @@ public class Utils {
         }
 
         return availableSpace;
-    }
-
-    public static boolean checkNfcSupported(Context context)
-    {
-        NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(context);
-
-        if (nfcAdapter != null) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public static boolean checkNfcEnabled(Context context)
-    {
-        NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(context);
-        boolean enabled = false;
-
-        if (nfcAdapter != null) {
-            enabled = nfcAdapter.isEnabled();
-        }
-
-        return enabled;
     }
 
 //    public static void showNfcNotSupportedToast(Context mContext)
