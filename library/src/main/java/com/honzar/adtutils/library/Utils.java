@@ -763,20 +763,12 @@ public class Utils {
         return false;
     }
 
-    public static void makeTextUnderlined(TextView column)
-    {
-        SpannableString content = new SpannableString(column.getText());
-        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-        column.setText(content);
-    }
 
-    public static Drawable getDrawableTintColor(Context context, int iconResourceId, int colorResourceId)
-    {
-        int color = ContextCompat.getColor(context, colorResourceId);
-        Drawable drawable = ContextCompat.getDrawable(context, iconResourceId);
-        DrawableCompat.setTint(drawable, color);
-        return drawable;
-    }
+
+
+
+
+
 
     public static String getStringResourceByName(Context activity, String aString)
     {
@@ -857,31 +849,7 @@ public class Utils {
 
 
 
-    public static int getRandomColor(Context context, long i)
-    {
-        switch ((int) i) {
-            case 0:
-                return ContextCompat.getColor(context, R.color.colorRed);
-            case 1:
-                return ContextCompat.getColor(context, R.color.colorGreen);
-            case 2:
-                return ContextCompat.getColor(context, R.color.colorYellow);
-            case 3:
-                return ContextCompat.getColor(context, R.color.colorBlue);
-            case 4:
-                return ContextCompat.getColor(context, R.color.colorOrange);
-            case 5:
-                return ContextCompat.getColor(context, R.color.colorPurple);
-            default:
-                return ContextCompat.getColor(context, R.color.colorBlack);
-        }
-    }
 
-    public static TextDrawable getColoCircle(Context context, long id, String name)
-    {
-        int color = Utils.getRandomColor(context, id % 6);
-        return TextDrawable.builder().buildRound(name.substring(0, 1), color);
-    }
 
     public static int kcalToKj(float kcal)
     {
@@ -1239,5 +1207,13 @@ public class Utils {
     public static String intToHex(int number)
     {
         return Integer.toString(number, 16);
+    }
+
+
+    // PRIVATE METHODS
+
+    static boolean checkContextNotNull(Context context)
+    {
+        return (context != null);
     }
 }

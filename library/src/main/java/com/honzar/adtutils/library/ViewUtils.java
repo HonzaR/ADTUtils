@@ -22,7 +22,7 @@ import android.widget.TextView;
  * honzar@appsdevteam.com
  */
 
-public class ViewUtils {
+public class ViewUtils extends Utils {
 
 
     /**

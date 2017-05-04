@@ -3,6 +3,7 @@ package com.honzar.adtutils.library;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -160,5 +161,12 @@ public class StringUtils {
     public static String removeDiacriticalMarks(String string)
     {
         return Normalizer.normalize(string, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+    }
+
+    public static void makeTextUnderlined(TextView column)
+    {
+        SpannableString content = new SpannableString(column.getText());
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        column.setText(content);
     }
 }
