@@ -806,18 +806,6 @@ public class Utils {
         return context.getDir("dex-cache", Context.MODE_PRIVATE);
     }
 
-
-
-
-    public static double roundDouble(double value, int places)
-    {
-        if (places < 0) throw new IllegalArgumentException();
-
-        BigDecimal bd = new BigDecimal(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
-    }
-
     public static boolean resolveFahrenheiteOrCelsia(Context context)
     {
         String localeCode = context.getResources().getConfiguration().locale.getISO3Country();
@@ -829,23 +817,7 @@ public class Utils {
         return isInFahrenheite;
     }
 
-    public static String toHex(byte[] bytes)
-    {
-        char[] c = new char[bytes.length * 2];
 
-        byte b;
-
-        for(int bx = 0, cx = 0; bx < bytes.length; ++bx, ++cx)
-        {
-            b = ((byte)(bytes[bx] >> 4));
-            c[cx] = (char)(b > 9 ? b + 0x37 + 0x20 : b + 0x30);
-
-            b = ((byte)(bytes[bx] & 0x0F));
-            c[++cx]=(char)(b > 9 ? b + 0x37 + 0x20 : b + 0x30);
-        }
-
-        return new String(c);
-    }
 
 
 
@@ -876,10 +848,7 @@ public class Utils {
 //        }
 //    }
 
-    public static String removeLeadingAndTrailingWhiteSpaces(String string)
-    {
-        return string.trim();
-    }
+
 
     public static boolean getExternalStorageAvailability()
     {
@@ -1162,16 +1131,6 @@ public class Utils {
         return stream.toByteArray();
     }
 
-    public static long kBToMB(long kilobytes)
-    {
-        return kilobytes / 1024;
-    }
-
-    public static long BToMB(long freeSpace)
-    {
-        return kBToMB(freeSpace) / 1024;
-    }
-
     public static String getFilesPrefix()
     {
         return isThisDeviceNougatAndHigher() ? "content://" : "file://";
@@ -1208,6 +1167,9 @@ public class Utils {
     {
         return Integer.toString(number, 16);
     }
+
+
+
 
 
     // PRIVATE METHODS

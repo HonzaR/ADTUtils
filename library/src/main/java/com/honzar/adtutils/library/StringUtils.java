@@ -169,4 +169,9 @@ public class StringUtils {
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         column.setText(content);
     }
+
+    public static String removeLeadingAndTrailingWhiteSpaces(String string)
+    {
+        return string.trim();
+    }
 }

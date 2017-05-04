@@ -198,7 +198,7 @@ public class IntentUtils {
 
             if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
 
-                if (Utils.isThisDeviceNougatAndHigher()) {
+                if (AppPropertyUtils.isThisDeviceNougatAndHigher()) {
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", outputFile));
                 } else {
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));

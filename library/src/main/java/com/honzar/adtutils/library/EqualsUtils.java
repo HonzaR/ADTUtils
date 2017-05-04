@@ -7,9 +7,6 @@ import java.util.List;
 
 public class EqualsUtils {
 
-	public static int HASHCODE_INVALID = 654123456;
-	public static int HASHCODE_INVALID_REPLACEMENT = 654123457;
-
     /**
      * Returns objects hashcode
      *
