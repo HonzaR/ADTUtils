@@ -1,7 +1,6 @@
 package com.honzar.adtutils.library;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -14,143 +13,143 @@ import android.os.Build;
 
 public class AppPropertyUtils {
 
-    private static int versionCode = Integer.MIN_VALUE;
 
+    // CHECK DEVICE SDK VERSION
+
+    /**
+     * Returns true if is device Jelly Bean or higher SDK version
+     *
+     * @return true/false
+     */
+    public static boolean isThisDeviceJellyBeanOrHigher()
+    {
+        return Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN;
+    }
+
+    /**
+     * Returns true if is device KiKat or higher SDK version
+     *
+     * @return true/false
+     */
+    public static boolean isThisDeviceKitKatOrHigher()
+    {
+        return Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT;
+    }
+
+    /**
+     * Returns true if is device Lollipop or higher SDK version
+     *
+     * @return true/false
+     */
     public static boolean isThisDeviceLollipopOrHigher()
     {
         return Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP;
     }
 
-    public static boolean isThisDeviceMarschmallowOrHigher()
+    /**
+     * Returns true if is device Marshmallow or higher SDK version
+     *
+     * @return true/false
+     */
+    public static boolean isThisDeviceMarshmallowOrHigher()
     {
         return Build.VERSION.SDK_INT == Build.VERSION_CODES.M;
     }
 
+    /**
+     * Returns true if is device Nougat or higher SDK version
+     *
+     * @return true/false
+     */
     public static boolean isThisDeviceNougatAndHigher()
     {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
     }
 
+    /**
+     * Returns this device SDK version
+     *
+     * @return SDK version
+     */
     public static int getDeviceSDKVersion()
     {
         return Build.VERSION.SDK_INT;
     }
 
+
+    // DEVICE TYPE
+
+    /**
+     * Returns true if this device is tablet
+     *
+     * @return true/false
+     */
     public static boolean isTablet(Context context)
     {
         return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
+    /**
+     * Returns true if this device is smartphone
+     *
+     * @return true/false
+     */
+    public static boolean isSmartphone(Context context)
+    {
+        return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE;
+    }
+
+
+    // MODEL / NAME / CODE
+
+    /**
+     * Returns readable device name, consisting of manufacturer (if any) and model
+     *
+     * @return readable device name
+     */
     public static String getReadableDeviceName()
     {
         String manufacturer = Build.MANUFACTURER;
         String model = Build.MODEL;
         if (model.startsWith(manufacturer)) {
-            return getFirstWordCapitalized(model);
+            return StringUtils.getFirstLetterCapitalized(model);
         } else {
-            return getFirstWordCapitalized(manufacturer) + " " + model;
+            return StringUtils.getFirstLetterCapitalized(manufacturer) + " " + model;
         }
     }
 
-    public static int getAppVersionBuild(Context context)
-    {
-        if (versionCode != Integer.MIN_VALUE)
-            return versionCode;
-        else {
-            try {
-                return versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
-            }
-            catch (PackageManager.NameNotFoundException e) {
-                return versionCode = 1;
-            }
-        }
-    }
-
+    /**
+     * Returns version name, which is defined in app gradle file
+     *
+     * @return version name or empty string in case of failure
+     */
     public static String getAppVersionName(Context context)
     {
         try {
             return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        } catch (NameNotFoundException e) {
             return "";
         }
     }
 
+    /**
+     * Returns version code, which is defined in app gradle file
+     *
+     * @return version core or 0 in case of failure
+     */
     public static int getAppVersionCode(Context context)
     {
         try {
             return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
-        }
-        catch (PackageManager.NameNotFoundException e) {
-            return 1;
-        }
-    }
-
-    /**
-     * Funkce vrati verzi aplikace bez postfixu typu beta1, RC3 "-debug" apod. - tzn. jen napr. 2.0.0
-     * @param context
-     * @return
-     */
-    public static String getAppVersionNameWithoutPostfix(Context context) {
-        try {
-            String ret = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-
-            int ind = ret.indexOf(' ');
-            if (ind >= 0)
-                ret = ret.substring(0, ind);
-
-            ind = ret.indexOf('-');
-            if (ind >= 0)
-                ret = ret.substring(0, ind);
-
-            return ret;
-        }
-        catch (PackageManager.NameNotFoundException e) {
-            return "err";
-        }
-    }
-
-    public static String getModelName() {
-        try {
-            String manufacturer = Build.MANUFACTURER;
-            String model = Build.MODEL;
-            if (model.startsWith(manufacturer)) {
-                return capitalize(model);
-            } else {
-                return capitalize(manufacturer) + " " + model;
-            }
-        }
-        catch (Exception ex) {
-            return "err";
-        }
-    }
-
-    public static int getAppVersionCode(Context context) {
-        if (versionCode != Integer.MIN_VALUE)
-            return versionCode;
-        else {
-            try {
-                return versionCode = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode;
-            }
-            catch (NameNotFoundException e) {
-                return versionCode = -1;
-            }
-        }
-    }
-
-    public static String getAppVersionName(Context context) {
-        try {
-            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-        }
-        catch (NameNotFoundException e) {
-            return "err";
+        } catch (NameNotFoundException e) {
+            return 0;
         }
     }
 
     /**
-     * Funkce vrati verzi aplikace bez postfixu typu beta1, RC3 "-debug" apod. - tzn. jen napr. 2.0.0
-     * @param context
-     * @return
+     * Returns version code without postfix like beta1, RC3 "-debug" and so on, so it returns e.g. 2.0.0
+     *
+     * @return version code without postfix
      */
     public static String getAppVersionNameWithoutPostfix(Context context) {
         try {
@@ -168,22 +167,6 @@ public class AppPropertyUtils {
         }
         catch (NameNotFoundException e) {
             return "err";
-        }
-    }
-
-    public static String getModelName()
-    {
-        try {
-            String manufacturer = Build.MANUFACTURER;
-            String model = Build.MODEL;
-            if (model.startsWith(manufacturer)) {
-                return StringUtils.capitalize(model);
-            } else {
-                return StringUtils.capitalize(manufacturer) + " " + model;
-            }
-        }
-        catch (Exception ex) {
-            return "";
         }
     }
 

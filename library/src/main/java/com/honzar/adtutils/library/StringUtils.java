@@ -4,6 +4,10 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.text.Normalizer;
 import java.util.List;
 
@@ -85,5 +89,76 @@ public class StringUtils {
         s = Normalizer.normalize(s, Normalizer.Form.NFD);
         s = s.replaceAll("[^\\p{ASCII}]", "");
         return s;
+    }
+
+    public static String getStringFromLocalHtml(String filePath)
+    {
+        StringBuilder contentBuilder = new StringBuilder();
+        try {
+            File fl = new File(filePath);
+            FileInputStream fin = new FileInputStream(fl);
+            BufferedReader in = new BufferedReader(new InputStreamReader(fin));
+
+            String str;
+            while ((str = in.readLine()) != null) {
+                contentBuilder.append(str);
+            }
+            in.close();
+        } catch (Exception e) {
+            //e.printStackTrace();
+            return null;
+        }
+
+        return contentBuilder.toString();
+    }
+
+
+    private static String capitalize(String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        char first = s.charAt(0);
+        if (Character.isUpperCase(first)) {
+            return s;
+        } else {
+            return Character.toUpperCase(first) + s.substring(1);
+        }
+    }
+
+    public static String getFirstLetterCapitalized(String s)
+    {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        char first = s.charAt(0);
+        if (Character.isUpperCase(first)) {
+            return s;
+        } else {
+            return Character.toUpperCase(first) + s.substring(1);
+        }
+    }
+
+    public static String getCapitalized(String userName)
+    {
+        String withoutLeadingAndTrailing = userName.trim();
+
+        String[] splited = getStringSplited(withoutLeadingAndTrailing);
+        String firstUppers = "";
+
+        for (int i = 0; i < splited.length; i++) {
+            firstUppers += getFirstLetterCapitalized(splited[i]) + " ";
+        }
+
+        return firstUppers.substring(0, firstUppers.length() - 1);
+    }
+
+    public static String[] getStringSplited(String userName)
+    {
+        return userName.split("\\s+");
+    }
+
+    public static String removeDiacriticalMarks(String string)
+    {
+        return Normalizer.normalize(string, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
 }
