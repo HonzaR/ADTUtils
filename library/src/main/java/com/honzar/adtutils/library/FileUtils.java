@@ -1,198 +1,273 @@
 package com.honzar.adtutils.library;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.os.StatFs;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
-
-import com.google.common.collect.ImmutableMap;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-
-import cz.mafra.jizdnirady.lib.base.ApiDataIO.ApiClassVersionsMapCreator;
-import cz.mafra.jizdnirady.lib.base.ApiDataIO.ApiDataInput;
-import cz.mafra.jizdnirady.lib.base.ApiDataIO.ApiDataInputOutputBase;
-import cz.mafra.jizdnirady.lib.base.ApiDataIO.ApiDataInputStreamWrp;
-import cz.mafra.jizdnirady.lib.base.ApiDataIO.ApiDataOutput;
-import cz.mafra.jizdnirady.lib.base.ApiDataIO.ApiDataOutputStreamWrp;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 public class FileUtils {
-    private static final String TAG = FileUtils.class.getSimpleName();
 
-    private static final String TMP_FILE_POSTFIX = "~tmp";
 
-    /* Checks if external storage is available for read and write */
-    public static boolean isExternalStorageWritable() {
-        String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state);
+    public static String[] getListOfAssetFiles(Context context, String path)
+    {
+        String[] list;
+        try {
+            list = context.getAssets().list(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        for (int i = 0; i < list.length; i++) {
+            list[i] = path + "/" + list[i];
+        }
+
+        return list;
     }
 
-    /* Checks if external storage is available to at least read */
-    public static boolean isExternalStorageReadable() {
-        String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state) ||
-                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
-    }
-
-
-    public static boolean readObjsFromFile(Context context, FileObjsStaticInfo info, ReadObjsCallback callback) {
-        synchronized (info.getLock()) {
-            String fileName = info.getFileName();
-            ApiDataInputStreamWrp stream = null;
-            try {
-                if (!context.getFileStreamPath(fileName).exists()) {
-                    fileName += TMP_FILE_POSTFIX; // Pokud dany soubor neexistuje, tak se podivame, jestli neexistuje soubor s priponou ~tmp a pripadne jej zkusime nacist
-
-                    if (!context.getFileStreamPath(fileName).exists()) {
-                        callback.setDefaults();
-                        return false;
-                    }
-                }
-
-                stream = new ApiDataInputStreamWrp(new DataInputStream(new BufferedInputStream(context.openFileInput(fileName))), info, info.getCustomFlags());
-                if (!info.canReadFile(stream.getDataVersion())) {
-                    callback.setDefaults();
-                    stream.close();
-                    stream = null;
-                    context.deleteFile(fileName);
-                    return false;
-                }
-                else {
-                    callback.readObjects(stream);
-                    return true;
+    public static ArrayList<File> getFilesFromDirectoryRecursively(ArrayList<File> list, File dir)
+    {
+        if (dir.exists()) {
+            File[] files = dir.listFiles();
+            for (int i = 0; i < files.length; ++i) {
+                File file = files[i];
+                if (file.isDirectory()) {
+                    getFilesFromDirectoryRecursively(list, file);
+                } else {
+                    list.add(file);
                 }
             }
-            catch (Exception e) {
-                Log.e(TAG, "Exception while reading " + fileName, e);
-                callback.setDefaults();
-                return false;
-            }
-            finally {
-                if (stream != null)
-                    stream.close();
-            }
         }
+        return list;
     }
 
-    public static boolean writeObjsToFile(Context context, FileObjsStaticInfo info, WriteObjsCallback callback) {
-        final boolean ret;
-        synchronized (info.getLock()) {
-            ApiDataOutputStreamWrp stream = null;
-            String fileNameTmp = info.getFileName() + TMP_FILE_POSTFIX;
-            try {
-                stream = new ApiDataOutputStreamWrp(new DataOutputStream(new BufferedOutputStream(
-                        context.openFileOutput(fileNameTmp, Context.MODE_PRIVATE))), info.getDataVersion());
-                callback.writeObjects(stream);
-            }
-            catch (Exception e) {
-                Log.e(TAG, "Exception while writing " + info.getFileName(), e);
-                return false;
-            }
-            finally {
-                if (stream != null)
-                    stream.close();
-            }
+    static public boolean copyFileOrDirFromAssests(Context c, String path)
+    {
+        AssetManager assetManager = c.getAssets();
+        String assets[] = null;
 
-            File tmpFile = context.getFileStreamPath(fileNameTmp);
-            File origFile = context.getFileStreamPath(info.getFileName());
-
-            if (origFile.exists())
-                origFile.delete();
-            ret = tmpFile.renameTo(origFile);
-        }
-        return ret;
-    }
-
-    public static void writeObjsToFileAsync(final Context context, final FileObjsStaticInfo info, final WriteObjsCallback callback) {
-        Thread t = new Thread(new Runnable() {
-            public void run() {
-                writeObjsToFile(context, info, callback);
-            }
-        });
-        t.start();
-    }
-
-    public static abstract class FileObjsStaticInfo implements ApiClassVersionsMapCreator {
-        private final Object lock;
-        private final String fileName;
-        private final int dataVersion;
-        private final int minReadDataVersion; // Tento rozsah nemusi obsahovat samotnou dataVersion - pokud je stejna verze nacitaneho souboru jako dataVersion, tak se vzdycky nacita...
-        private final int maxReadDataVersion;
-        private final int customFlags;
-
-        public FileObjsStaticInfo(Object lock, String fileName, int dataVersion) {
-            this(lock, fileName, dataVersion, Integer.MIN_VALUE, dataVersion);
-        }
-
-        public FileObjsStaticInfo(Object lock, String fileName, int dataVersion, int minReadDataVersion, int maxReadDataVersion) {
-            this(lock, fileName, dataVersion, minReadDataVersion, maxReadDataVersion, ApiDataInputOutputBase.FLAG_NONE);
-        }
-
-        public FileObjsStaticInfo(Object lock, String fileName, int dataVersion, int minReadDataVersion, int maxReadDataVersion, int customFlags) {
-            this.lock = lock;
-            this.fileName = fileName;
-            this.dataVersion = dataVersion;
-            this.minReadDataVersion = minReadDataVersion;
-            this.maxReadDataVersion = maxReadDataVersion;
-            this.customFlags = customFlags;
-        }
-
-        public Object getLock() {
-            return this.lock;
-        }
-
-        public String getFileName() {
-            return this.fileName;
-        }
-
-        public int getDataVersion() {
-            return this.dataVersion;
-        }
-
-        public int getCustomFlags() {
-            return customFlags;
-        }
-
-        public boolean canReadFile(int fileDataVersion) {
-            return fileDataVersion == dataVersion
-                    || (fileDataVersion >= minReadDataVersion && fileDataVersion <= maxReadDataVersion);
-        }
-
-
-        public FileObjsStaticInfo createPortableInfoForWriting() {
-            return new FileObjsStaticInfo(getLock(), getFileName() + ".port", getDataVersion(), minReadDataVersion, maxReadDataVersion, customFlags | ApiDataInputOutputBase.FLAG_PORTABLE) {
-                @Override
-                public ImmutableMap<String, Integer> createClassVersionsMap(int dataVersion) {
-                    return ImmutableMap.of();
+        try {
+            assets = assetManager.list(path);
+            if (assets.length == 0) {
+                copyFile(c, path);
+            } else {
+                String fullPath = c.getExternalFilesDir(null) + "/" + path;
+                File dir = new File(fullPath);
+                if (!dir.exists())
+                    dir.mkdir();
+                for (int i = 0; i < assets.length; ++i) {
+                    copyFileOrDirFromAssests(c, path + "/" + assets[i]);
                 }
-            };
+            }
+            return true;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return false;
         }
     }
 
-    public static class FileObjsStaticInfoDiscardLegacy extends FileObjsStaticInfo {
-        public FileObjsStaticInfoDiscardLegacy(Object lock, String fileName, int dataVersion) {
-            super(lock, fileName, dataVersion, dataVersion, dataVersion);
+    public static File getAppDataExternalDirectory(Context c, String directory) {
+
+        File dir = new File(c.getExternalFilesDir(null), directory);
+
+        if (!dir.exists()) {
+            dir.mkdirs();
         }
 
-        @Override
-        public ImmutableMap<String, Integer> createClassVersionsMap(int dataVersion) {
-            return ImmutableMap.of();
+        return dir;
+    }
+
+    public static File getDexCacheDirectory(Context context)
+    {
+        return context.getDir("dex-cache", Context.MODE_PRIVATE);
+    }
+
+    public static File[] getAllFilesOrDirectoriesFromDirectory(File dir)
+    {
+        File[] files = null;
+        if (dir.exists()) {
+            files = dir.listFiles();
+        }
+        return files;
+    }
+
+    public static ArrayList<File> getAllFilesFromDirectory(File parentDir)
+    {
+        ArrayList<File> inFiles = new ArrayList<>();
+        File[] files = parentDir.listFiles();
+
+        for (File file : files) {
+            if (file.isDirectory()) {
+                inFiles.addAll(getAllFilesFromDirectory(file));
+            } else {
+                inFiles.add(file);
+            }
+        }
+        return inFiles;
+    }
+
+    public static String getBase64FromFile(File file)
+    {
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Bitmap bm = BitmapFactory.decodeStream(fis);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] b = baos.toByteArray();
+        return Base64.encodeToString(b, Base64.DEFAULT);
+    }
+
+    public boolean saveBitmapToFile(File dir, String fileName, Bitmap bm, Bitmap.CompressFormat format, int quality)
+    {
+        File imageFile = new File(dir,fileName);
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(imageFile);
+
+            bm.compress(format,quality,fos);
+
+            fos.close();
+
+            return true;
+        }
+        catch (IOException e) {
+
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        return false;
+    }
+
+    public static String convertStreamToString(InputStream is)
+    {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb = new StringBuilder();
+
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+
+            reader.close();
+            return sb.toString();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
-    public interface ReadObjsCallback {
-        void readObjects(ApiDataInput d);
-        void setDefaults();
+    public static String getStringFromFile (String filePath)
+    {
+        try {
+            File fl = new File(filePath);
+            FileInputStream fin = new FileInputStream(fl);
+
+            String ret = convertStreamToString(fin);
+
+            fin.close();
+            return ret;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public interface WriteObjsCallback {
-        void writeObjects(ApiDataOutput d);
+    public static String getStringFromAsset(Context context, String fileName)
+    {
+        String jsonString;
+
+        try {
+            InputStream is = context.getAssets().open(fileName);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+
+            is.read(buffer);
+            is.close();
+
+            jsonString = new String(buffer, "UTF-8");
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+        return jsonString;
     }
 
-    public interface FileObjsCallback extends WriteObjsCallback, ReadObjsCallback {
-
+    public static byte[] getByteArrayFromBitmap(Bitmap bitmap)
+    {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        return stream.toByteArray();
     }
+
+    public static void addPhotoToGallery(Context context, String photoUrl)
+    {
+        ContentValues values = new ContentValues();
+
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        values.put(MediaStore.MediaColumns.DATA, photoUrl);
+
+        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(photoUrl);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        context.sendBroadcast(mediaScanIntent);
+    }
+
+        public static File getAlbumStorageDir(String albumName)
+        {
+            // Get the directory for the user's public pictures directory.
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), albumName);
+            if (!file.mkdirs()) {
+                Log.e("Util Error", "Directory not created");
+            }
+            return file;
+        }
 }

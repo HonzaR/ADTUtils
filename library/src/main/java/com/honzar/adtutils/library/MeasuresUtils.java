@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.text.format.DateUtils;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 
 /**
@@ -202,6 +203,18 @@ public class MeasuresUtils extends Utils {
     public static int kcalToKj(float kcal)
     {
         return (int) NumberUtils.roundDouble(kcal * 4.184, 0);
+    }
+
+
+    // PRIVATE
+
+    private static DecimalFormat decimalFormat;
+    private static DecimalFormat getDecimalFormatter()
+    {
+        if (decimalFormat == null) {
+            decimalFormat = new DecimalFormat("#.#");
+        }
+        return decimalFormat;
     }
 
 }
