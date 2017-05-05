@@ -6,6 +6,8 @@ import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
@@ -325,6 +327,25 @@ public class ViewUtils extends Utils {
         int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
         textView.measure(widthMeasureSpec, heightMeasureSpec);
         return textView.getMeasuredWidth();
+    }
+
+    /**
+     * Makes text in textView underlined
+     *
+     * @param view
+     *
+     * @return true if succeed, false otherwise
+     */
+    public static boolean makeTextUnderlined(TextView view)
+    {
+        if (checkNull(view)) {
+            return false;
+        }
+
+        SpannableString content = new SpannableString(view.getText());
+        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        view.setText(content);
+        return true;
     }
 
 

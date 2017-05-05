@@ -166,4 +166,42 @@ public class MeasuresUtils extends Utils {
         return (getDecimalFormatter().format(weight) + "g");
     }
 
+    // OTHERS
+
+    /**
+     * Converts kilobytes to megabytes
+     *
+     * @param kilobytes
+     *
+     * @return megabytes
+     */
+    public static long kBTomB(long kilobytes)
+    {
+        return kilobytes / 1024;
+    }
+
+    /**
+     * Converts bytes to kilobytes
+     *
+     * @param bytes
+     *
+     * @return kilobytes
+     */
+    public static long BTokB(long bytes)
+    {
+        return bytes / 1024;
+    }
+
+    /**
+     * Converts kilocalories to kilojoules
+     *
+     * @param kcal
+     *
+     * @return kj
+     */
+    public static int kcalToKj(float kcal)
+    {
+        return (int) NumberUtils.roundDouble(kcal * 4.184, 0);
+    }
+
 }

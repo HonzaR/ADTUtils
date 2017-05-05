@@ -87,19 +87,6 @@ public class Utils {
     private static final int MISSING_PLAY_SERVICES_DIALOG = 1204;
     private static int versionCode = Integer.MIN_VALUE;
 
-    private static final DateTimeFormatter dateTimeFromISOStringFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
-    private static final SimpleDateFormat dateTimeToISOStringFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
-    private static final SimpleDateFormat dateTimeToISOStringFormatterOnlyDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-    private static final DateTimeFormatter dateTimeEnFormatter = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
-    private static final DateTimeFormatter dateTimeEnFormatterTime = DateTimeFormat.forPattern("HH:mm");
-    private static final DateTimeFormatter dateTimeEnFormatterDate = DateTimeFormat.forPattern("dd/MM/yyyy");
-    private static final DateTimeFormatter dateTimeCsFormatter = DateTimeFormat.forPattern("d.M.yyyy, HH:mm");
-    private static final DateTimeFormatter dateTimeCsFormatterTime = DateTimeFormat.forPattern("HH:mm");
-    private static final DateTimeFormatter dateTimeCsFormatterTimeLong = DateTimeFormat.forPattern("HH:mm:ss");
-    private static final DateTimeFormatter dateTimeCsFormatterTimeMinutes = DateTimeFormat.forPattern("mm:ss");
-    private static final DateTimeFormatter dateTimeCsFormatterDate = DateTimeFormat.forPattern("d.M.yyyy");
-    private static final SimpleDateFormat dateTimeCsFormatterMonth = new SimpleDateFormat("d. MMMM", Locale.getDefault()); // napr. 10. listopadu
-
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
     public static Gson gson;
@@ -120,6 +107,10 @@ public class Utils {
         }
         return decimalFormat;
     }
+
+
+
+
 
     public static boolean checkWifiEnabled(Context context)
     {
@@ -228,49 +219,6 @@ public class Utils {
             return false;
         }
     }
-
-    public static String getNameSalted(String name, String salt)
-    {
-        return salt + name + salt;
-    }
-
-//    public static String generatePinForName(String saltedNameString)
-//    {
-//        final HashCode hashCode = Hashing.sha1().hashString(saltedNameString, Charset.defaultCharset());
-//        String sha1All = hashCode.toString();
-//
-//        String sha1JustDigits = sha1All.replaceAll("\\D+","");  // just digits
-//
-//        if (!(sha1JustDigits.length() < 4)) {
-//            sha1JustDigits = sha1JustDigits.substring(0, 4);
-//        } else {
-//            int length = sha1JustDigits.length();
-//            for (int i = 0; i < (4 - length); i++) {            // fill to 4 if needed
-//                sha1JustDigits += "0";
-//            }
-//        }
-//        return sha1JustDigits;
-//    }
-//
-//    public static String generateGuidForName(String saltedNameString)
-//    {
-//        final HashCode hashCode = Hashing.sha1().hashString(saltedNameString, Charset.defaultCharset());
-//        String sha1All = hashCode.toString();
-//
-//        if (sha1All.length() >= 32) {
-//            String sha1_32 = sha1All.substring(0, 32);
-//
-//            return sha1_32.substring(0,8) + "-" + sha1_32.substring(8,12) + "-" + sha1_32.substring(12,16) + "-" + sha1_32.substring(16,20) + "-" + sha1_32.substring(20);
-//        }
-//
-//        return null;
-//    }
-
-    public static String generateRandomGIUD()
-    {
-        return UUID.randomUUID().toString().toUpperCase();
-    }
-
 
 
     public static String[] getListOfAssetFiles(Context context, String path)
@@ -554,31 +502,6 @@ public class Utils {
 
 
 
-
-
-
-
-
-    public static String getStringResourceByName(Context activity, String aString)
-    {
-        int resId = 0;
-
-        try {
-            String packageName = activity.getPackageName();
-            resId = activity.getResources().getIdentifier(aString, "string", packageName);
-        } catch (NullPointerException npe) {
-            npe.printStackTrace();
-        }
-
-        if (resId == 0) {
-            return aString;
-        } else {
-            return activity.getResources().getString(resId);
-        }
-    }
-
-
-
     public static File getAppDataExternalDirectory(Context c, String directory) {
 
         File dir = new File(c.getExternalFilesDir(null), directory);
@@ -612,10 +535,7 @@ public class Utils {
 
 
 
-    public static int kcalToKj(float kcal)
-    {
-        return (int) roundDouble(kcal * 4.184, 0);
-    }
+
 
 //    public static boolean checkGooglePlayServicesAvailability(Context context)
 //    {
@@ -886,33 +806,6 @@ public class Utils {
         return jsonString;
     }
 
-    public static String generateMD5FromString(String jsonString)
-    {
-        byte[] thedigest;
-
-        try {
-            byte[] bytesOfMessage = jsonString.getBytes("UTF-8");
-
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            thedigest = md.digest(bytesOfMessage);
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return null;
-        }
-        BigInteger bigInt = new BigInteger(1, thedigest);
-        String hashtext = bigInt.toString(16);
-
-        while(hashtext.length() < 32 ){
-            hashtext = "0"+hashtext;
-        }
-        return hashtext;
-        //return Base64.encodeToString(thedigest, Base64.DEFAULT);
-    }
-
     public static byte[] getByteArrayFromBitmap(Bitmap bitmap)
     {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -951,15 +844,6 @@ public class Utils {
         }
         return file;
     }
-
-    public static String intToHex(int number)
-    {
-        return Integer.toString(number, 16);
-    }
-
-
-
-
 
     // PRIVATE METHODS
 

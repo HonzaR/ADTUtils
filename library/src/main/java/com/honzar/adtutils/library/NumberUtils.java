@@ -65,26 +65,14 @@ public class NumberUtils {
     }
 
     /**
-     * Converts kilobytes to megabytes
+     * Converts decimal to hex format of number
      *
-     * @param kilobytes
+     * @param number
      *
-     * @return megabytes
+     * @return hex format of number
      */
-    public static long kBTomB(long kilobytes)
+    public static String decimalToHex(int number)
     {
-        return kilobytes / 1024;
-    }
-
-    /**
-     * Converts bytes to kilobytes
-     *
-     * @param bytes
-     *
-     * @return kilobytes
-     */
-    public static long BTokB(long bytes)
-    {
-        return bytes / 1024;
+        return Integer.toString(number, 16);
     }
 }

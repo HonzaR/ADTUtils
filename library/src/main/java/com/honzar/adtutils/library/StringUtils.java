@@ -1,16 +1,10 @@
 package com.honzar.adtutils.library;
 
-import android.text.SpannableString;
-import android.text.TextUtils;
-import android.text.style.UnderlineSpan;
-import android.widget.TextView;
+import android.content.Context;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.text.Normalizer;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Honza Rychnovský on 20.9.2016.
@@ -18,160 +12,244 @@ import java.util.List;
  * honzar@appsdevteam.com
  */
 
-public class StringUtils {
+public class StringUtils extends Utils {
 
-    public static String joinToStringWithDelimiters(String delimiter, List<Long> members)
+
+    // STRING FORMATTING
+
+    /**
+     * Checks string to null and emptiness
+     *
+     * @param value
+     *
+     * @return true/false
+     */
+    public static boolean checkEmptyString(String value)
     {
-        String result = "";
-        if (members != null && !members.isEmpty()) {
-            for (Long member : members) {
-                result += member + delimiter;
-            }
-            if (result.length() > 0) result = result.substring(0, result.length() - delimiter.length());
-        }
-        return result;
+        return (value == null || value.isEmpty());
     }
 
-    public static String getStringFirstUpper(String s)
+    /**
+     * Makes first letter of string upper
+     *
+     * @param value
+     *
+     * @return processed string or empty string
+     */
+    public static String getStringFirstUpper(String value)
     {
-        if (TextUtils.isEmpty(s))
+        if (checkEmptyString(value)) {
             return "";
-        else if (s.length() == 1)
-            return s.toUpperCase();
-        else
-            return s.substring(0, 1).toUpperCase() + s.substring(1);
-    }
-
-    public static String getStringAllUpper(String s)
-    {
-        if (TextUtils.isEmpty(s))
-            return "";
-        else if (s.length() == 1)
-            return s.toUpperCase();
-        else
-            return s.toUpperCase();
-    }
-
-    public static String getStringAllLower(String s)
-    {
-        if (TextUtils.isEmpty(s))
-            return "";
-        else if (s.length() == 1)
-            return s.toUpperCase();
-        else
-            return s.toLowerCase();
-    }
-
-    public static String getStringWithUnitNotNull(float value, String unit)
-    {
-        if (value == Float.MIN_VALUE) {
-            return "-";
-        } else if (unit == null || unit.isEmpty()) {
-            return NumberUtils.removeUnnecessaryDecimalZeros(value);
+        } else if (value.length() == 1) {
+            return value.toUpperCase();
         } else {
-            return NumberUtils.removeUnnecessaryDecimalZeros(value) + " " + unit;
+            return value.substring(0, 1).toUpperCase() + value.substring(1);
         }
     }
 
-    public static String checkEmptyString(String item)
+    /**
+     * Makes all letters of string upper
+     *
+     * @param value
+     *
+     * @return processed string or empty string
+     */
+    public static String getStringAllUpper(String value)
     {
-        return item == null || item.isEmpty() ? null : item;
+        if (checkEmptyString(value))
+            return "";
+        else if (value.length() == 1)
+            return value.toUpperCase();
+        else
+            return value.toUpperCase();
     }
 
-    public static SpannableString getStringUnderlined(String text)
+    /**
+     * Makes all letters of string lower
+     *
+     * @param value
+     *
+     * @return processed string or empty string
+     */
+    public static String getStringAllLower(String value)
     {
-        SpannableString content = new SpannableString(text);
-        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-        return content;
+        if (checkEmptyString(value))
+            return "";
+        else if (value.length() == 1)
+            return value.toUpperCase();
+        else
+            return value.toLowerCase();
     }
 
-    public static String removeAccents(String s)
+    /**
+     * Capitalizes all words in string.
+     * Warn: this method changes any white space to regular space " ".
+     *
+     * @param value
+     *
+     * @return processed string or empty string
+     */
+    private static String capitalize(String value)
     {
-        s = Normalizer.normalize(s, Normalizer.Form.NFD);
-        s = s.replaceAll("[^\\p{ASCII}]", "");
-        return s;
+        if (checkEmptyString(value)) {
+            return "";
+        }
+
+        String[] wordsArray = value.split("\\s+");
+        StringBuilder builder = new StringBuilder();
+
+        for (int i = 0; i < wordsArray.length; i++) {
+            String s = wordsArray[i];
+
+            if (!checkEmptyString(s)) {
+                String cap = s.substring(0, 1).toUpperCase() + s.substring(1);
+                builder.append(cap);
+
+                if (i < wordsArray.length)
+                    builder.append(" ");
+            }
+        }
+        return builder.toString();
     }
 
-    public static String getStringFromLocalHtml(String filePath)
+    /**
+     * Removes accents
+     *
+     * @param value
+     *
+     * @return string without accents or empty string in case of failure
+     */
+    public static String removeAccents(String value)
     {
-        StringBuilder contentBuilder = new StringBuilder();
+        if (checkEmptyString(value)) {
+            return "";
+        }
+
+        value = Normalizer.normalize(value, Normalizer.Form.NFD);
+        value = value.replaceAll("[^\\p{ASCII}]", "");
+        return value;
+    }
+
+    /**
+     * Removes diacritic marks
+     *
+     * @param value
+     *
+     * @return string without diacritics marks or empty string in case of failure
+     */
+    public static String removeDiacriticalMarks(String value)
+    {
+        if (checkEmptyString(value)) {
+            return "";
+        }
+
+        return Normalizer.normalize(value, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+    }
+
+    /**
+     * Removes leading and trailing white spaces from string
+     *
+     * @param value
+     *
+     * @return string without leading and trailing white spaces or empty string in case of failure
+     */
+    public static String removeLeadingAndTrailingWhiteSpaces(String value)
+    {
+        if (checkEmptyString(value)) {
+            return "";
+        }
+        return value.trim();
+    }
+
+
+    // STRING COLLECTIONS
+
+    /**
+     * Joins items from list to string separated by delimiter
+     *
+     * @param delimiter
+     * @param items
+     *
+     * @return string consisting of items separated by delimiter or empty string in case of failure
+     */
+    public static String joinToStringWithDelimiters(String delimiter, List<Object> items)
+    {
+        if (delimiter == null) {
+            return "";
+        }
+        if (items == null || items.isEmpty()) {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder();
+
+        for (int i = 0; i < items.size(); i++) {
+            builder.append(items.get(i).toString());
+
+            if (i < items.size())
+                builder.append(delimiter);
+        }
+
+        return builder.toString();
+    }
+
+    /**
+     * Splits string by delimiter
+     *
+     * @param value
+     * @param delimiter
+     *
+     * @return String array of words from string
+     */
+    public static String[] getStringSplitedByAnyWhiteSpace(String value, String delimiter)
+    {
+        if (checkEmptyString(value) || delimiter == null) {
+            return new String[]{};
+        }
+        return value.split(delimiter);
+    }
+
+
+    // GENERAL
+
+    /**
+     * Generates random UUID
+     *
+     * @return random UUID
+     */
+    public static String generateRandomGIUD()
+    {
+        return UUID.randomUUID().toString().toUpperCase();
+    }
+
+    /**
+     * Returns value of string by its resource name
+     *
+     * @param context
+     * @param resName
+     *
+     * @return value of string by its resource name or resource name in case of failure
+     */
+    public static String getStringValueByItsResourceName(Context context, String resName)
+    {
+        if (checkNull(context) || checkEmptyString(resName)) {
+            return resName;
+        }
+
+        int resId = 0;
+
         try {
-            File fl = new File(filePath);
-            FileInputStream fin = new FileInputStream(fl);
-            BufferedReader in = new BufferedReader(new InputStreamReader(fin));
-
-            String str;
-            while ((str = in.readLine()) != null) {
-                contentBuilder.append(str);
-            }
-            in.close();
-        } catch (Exception e) {
-            //e.printStackTrace();
-            return null;
+            String packageName = context.getPackageName();
+            resId = context.getResources().getIdentifier(resName, "string", packageName);
+        } catch (NullPointerException npe) {
+            // nothing to do
         }
 
-        return contentBuilder.toString();
-    }
-
-
-    private static String capitalize(String s) {
-        if (s == null || s.length() == 0) {
-            return "";
-        }
-        char first = s.charAt(0);
-        if (Character.isUpperCase(first)) {
-            return s;
+        if (resId == 0) {
+            return resName;
         } else {
-            return Character.toUpperCase(first) + s.substring(1);
+            return context.getResources().getString(resId);
         }
     }
 
-    public static String getFirstLetterCapitalized(String s)
-    {
-        if (s == null || s.length() == 0) {
-            return "";
-        }
-        char first = s.charAt(0);
-        if (Character.isUpperCase(first)) {
-            return s;
-        } else {
-            return Character.toUpperCase(first) + s.substring(1);
-        }
-    }
-
-    public static String getCapitalized(String userName)
-    {
-        String withoutLeadingAndTrailing = userName.trim();
-
-        String[] splited = getStringSplited(withoutLeadingAndTrailing);
-        String firstUppers = "";
-
-        for (int i = 0; i < splited.length; i++) {
-            firstUppers += getFirstLetterCapitalized(splited[i]) + " ";
-        }
-
-        return firstUppers.substring(0, firstUppers.length() - 1);
-    }
-
-    public static String[] getStringSplited(String userName)
-    {
-        return userName.split("\\s+");
-    }
-
-    public static String removeDiacriticalMarks(String string)
-    {
-        return Normalizer.normalize(string, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-    }
-
-    public static void makeTextUnderlined(TextView column)
-    {
-        SpannableString content = new SpannableString(column.getText());
-        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-        column.setText(content);
-    }
-
-    public static String removeLeadingAndTrailingWhiteSpaces(String string)
-    {
-        return string.trim();
-    }
 }
