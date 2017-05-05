@@ -44,7 +44,7 @@ public class ColorUtils extends Utils {
      */
     public static Drawable getTintedDrawableIcon(Context context, int iconResourceId, int colorResourceId)
     {
-        if (!checkContextNotNull(context) && iconResourceId > 0 && colorResourceId > 0) {
+        if (!checkNull(context) && iconResourceId > 0 && colorResourceId > 0) {
             return null;
         }
 
@@ -63,11 +63,29 @@ public class ColorUtils extends Utils {
      */
     public static int getRandomColor(Context context)
     {
-        if (!checkContextNotNull(context)) {
+        if (!checkNull(context)) {
             return 0;
         }
         Random rnd = new Random();
         return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+    }
+
+    /**
+     * Returns transparency color
+     *
+     * @param color to be processed
+     * @param transparency transparency level in range 0.0 - 1.0
+     *
+     * @return transparency color
+     */
+    public static int makeColorTransparent(int color, float transparency)
+    {
+        if (transparency >= 0f && transparency <= 1f) {
+            int alpha = (int) (transparency * 255);
+            return (color & 0x00ffffff) | (alpha << 24);
+        }
+
+        return color;
     }
 
 }
