@@ -35,7 +35,7 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-public class FileUtils {
+public class FileUtils extends Utils {
 
 
     public static String[] getListOfAssetFiles(Context context, String path)

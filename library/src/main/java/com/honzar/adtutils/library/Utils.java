@@ -1,5 +1,6 @@
 package com.honzar.adtutils.library;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ContentValues;
@@ -88,53 +89,120 @@ public class Utils {
 
     // CHECK METHODS
 
+    /**
+     * Checks if is wifi module turned on
+     *
+     * @param context
+     *
+     * @return true/false
+     */
     public static boolean checkWifiEnabled(Context context)
     {
+        if (checkNull(context)) {
+            return false;
+        }
         WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         return wifi.isWifiEnabled();
     }
 
+    /**
+     * Checks if is device connected to internet
+     *
+     * @param context
+     *
+     * @return true/false
+     */
     public static boolean checkInternetConnection(Context context)
     {
+        if (checkNull(context)) {
+            return false;
+        }
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
+    /**
+     * Checks if is device connected to internet through 3g module
+     *
+     * @param context
+     *
+     * @return true/false
+     */
     public static boolean checkMobileDataConnectionEnabled(Context context)
     {
+        if (checkNull(context)) {
+            return false;
+        }
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected() && (activeNetworkInfo.getType() == ConnectivityManager.TYPE_MOBILE);
     }
 
-    public static boolean checkBluetoothEnabled()
+    /**
+     * Checks if is bluetooth module turned on
+     *
+     * @param context
+     *
+     * @return true/false
+     */
+    public static boolean checkBluetoothEnabled(Context context)
     {
+        if (checkNull(context)) {
+            return false;
+        }
+        if ((ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED)) {
+            return false;
+        }
+
         final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         return (bluetoothAdapter != null && bluetoothAdapter.isEnabled());
     }
 
+    /**
+     * Checks if is location module turned on
+     *
+     * @param context
+     *
+     * @return true/false
+     */
     public static boolean checkLocationEnabled(Context context)
     {
+        if (checkNull(context)) {
+            return false;
+        }
+
         int locationMode;
         String locationProviders;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
             try {
                 locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
             } catch (Settings.SettingNotFoundException e) {
-                e.printStackTrace();
                 return false;
             }
             return locationMode != Settings.Secure.LOCATION_MODE_OFF;
-        }else{
+
+        } else {
             locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
             return !TextUtils.isEmpty(locationProviders);
         }
     }
 
+    /**
+     * Checks if device has back camera
+     *
+     * @param context
+     *
+     * @return true/false
+     */
     public static boolean checkDeviceHasBackCamera(Context context)
     {
+        if (checkNull(context)) {
+            return false;
+        }
+
         PackageManager pm = context.getPackageManager();
 
         if (pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
@@ -144,17 +212,39 @@ public class Utils {
         return false;
     }
 
+    /**
+     * Checks if device has any camera
+     *
+     * @param context
+     *
+     * @return true/false
+     */
     public static boolean checkDeviceHasAnyCamera(Context context)
     {
-        if (Build.VERSION.SDK_INT < 21) {
-            return Camera.getNumberOfCameras() > 0;
-        } else {
+        if (checkNull(context)) {
+            return false;
+        }
+
+        if (AppPropertyUtils.getDeviceSDKVersion() >= Build.VERSION_CODES.LOLLIPOP) {
             return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
+        } else {
+            return Camera.getNumberOfCameras() > 0;
         }
     }
 
+    /**
+     * Checks if device supports NFC
+     *
+     * @param context
+     *
+     * @return true/false
+     */
     public static boolean checkNfcSupported(Context context)
     {
+        if (checkNull(context)) {
+            return false;
+        }
+
         NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(context);
 
         if (nfcAdapter != null) {
@@ -164,8 +254,19 @@ public class Utils {
         return false;
     }
 
+    /**
+     * Checks if NFC is turned on
+     *
+     * @param context
+     *
+     * @return true/false
+     */
     public static boolean checkNfcEnabled(Context context)
     {
+        if (checkNull(context)) {
+            return false;
+        }
+
         NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(context);
         boolean enabled = false;
 
@@ -176,77 +277,132 @@ public class Utils {
         return enabled;
     }
 
+    /**
+     * Checks if pdf file can be displayed in external app
+     *
+     * @param context
+     *
+     * @return true/false
+     */
     public static boolean checkCanDisplayPdf(Context context)
     {
+        if (context == null) {
+            return false;
+        }
         PackageManager packageManager = context.getPackageManager();
         Intent testIntent = new Intent(Intent.ACTION_VIEW);
         testIntent.setType("application/pdf");
         return (packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0);
     }
 
+    /**
+     * Checks if image can be displayed in external app
+     *
+     * @param context
+     *
+     * @return true/false
+     */
     public static boolean checkCanDisplayImage(Context context)
     {
+        if (checkNull(context)) {
+            return false;
+        }
         PackageManager packageManager = context.getPackageManager();
         Intent testIntent = new Intent(Intent.ACTION_VIEW);
         testIntent.setType("image/*");
-        if (packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
     }
 
 
     // VALIDATION
 
+    /**
+     * Validates email address
+     *
+     * @param email
+     *
+     * @return true/false
+     */
     public static boolean isEmailAddressValid(String email)
     {
+        if (StringUtils.checkEmptyString(email)) {
+            return false;
+        }
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
+    /**
+     * Validates web url address
+     *
+     * @param webUrl
+     *
+     * @return true/false
+     */
     public static boolean isWebUrlValid(String webUrl)
     {
+        if (StringUtils.checkEmptyString(webUrl)) {
+            return false;
+        }
         return Patterns.WEB_URL.matcher(webUrl).matches();
     }
 
+    /**
+     * Validates phone number address
+     *
+     * @param phoneNumber
+     *
+     * @return true/false
+     */
     public static boolean isPhoneNumberValid(String phoneNumber)
     {
+        if (StringUtils.checkEmptyString(phoneNumber)) {
+            return false;
+        }
         return Patterns.PHONE.matcher(phoneNumber).matches();
     }
 
+    /**
+     * Validates domain name address
+     *
+     * @param domainName
+     *
+     * @return true/false
+     */
     public static boolean isDomainNameValid(String domainName)
     {
+        if (StringUtils.checkEmptyString(domainName)) {
+            return false;
+        }
         return Patterns.DOMAIN_NAME.matcher(domainName).matches();
     }
 
+    /**
+     * Validates ip address address
+     *
+     * @param ipAddress
+     *
+     * @return true/false
+     */
     public static boolean isIpAddressValid(String ipAddress)
     {
+        if (StringUtils.checkEmptyString(ipAddress)) {
+            return false;
+        }
         return Patterns.IP_ADDRESS.matcher(ipAddress).matches();
     }
 
 
+    // OTHERS
 
-    //
-
+    /**
+     * Returns file prefix according to SDK version
+     *
+     * @return files prefix
+     */
     public static String getFilesPrefix()
     {
-        return isThisDeviceNougatAndHigher() ? "content://" : "file://";
+        return AppPropertyUtils.isThisDeviceNougatAndHigher() ? "content://" : "file://";
     }
-
-
-    public static boolean resolveFahrenheiteOrCelsia(Context context)
-    {
-        String localeCode = context.getResources().getConfiguration().locale.getISO3Country();
-        boolean isInFahrenheite =   localeCode.equals("USA") ||    // USA
-                localeCode.equals("BHS") ||    // Bahamas
-                localeCode.equals("BLZ") ||    // Belize
-                localeCode.equals("CYM") ||    // Cayman Islands
-                localeCode.equals("PLW");      // Palau
-        return isInFahrenheite;
-    }
-
-
-
 
 
     // PRIVATE METHODS

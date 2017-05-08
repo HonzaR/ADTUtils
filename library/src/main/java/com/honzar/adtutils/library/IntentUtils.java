@@ -439,7 +439,7 @@ public class IntentUtils {
             return false;
         }
 
-        if (Utils.checkBluetoothEnabled()) {
+        if (Utils.checkBluetoothEnabled(context)) {
             return true;
         }
 

@@ -23,7 +23,7 @@ public class AppPropertyUtils {
      */
     public static boolean isThisDeviceJellyBeanOrHigher()
     {
-        return Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
     }
 
     /**
@@ -33,7 +33,7 @@ public class AppPropertyUtils {
      */
     public static boolean isThisDeviceKitKatOrHigher()
     {
-        return Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
     }
 
     /**
@@ -43,7 +43,7 @@ public class AppPropertyUtils {
      */
     public static boolean isThisDeviceLollipopOrHigher()
     {
-        return Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
 
     /**
@@ -53,7 +53,7 @@ public class AppPropertyUtils {
      */
     public static boolean isThisDeviceMarshmallowOrHigher()
     {
-        return Build.VERSION.SDK_INT == Build.VERSION_CODES.M;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
     /**
@@ -112,9 +112,9 @@ public class AppPropertyUtils {
         String manufacturer = Build.MANUFACTURER;
         String model = Build.MODEL;
         if (model.startsWith(manufacturer)) {
-            return StringUtils.getFirstLetterCapitalized(model);
+            return StringUtils.getStringFirstUpper(model);
         } else {
-            return StringUtils.getFirstLetterCapitalized(manufacturer) + " " + model;
+            return StringUtils.getStringFirstUpper(manufacturer) + " " + model;
         }
     }
 

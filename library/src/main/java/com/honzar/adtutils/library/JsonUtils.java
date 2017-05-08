@@ -12,7 +12,7 @@ import java.math.BigInteger;
  * honzar@appsdevteam.com
  */
 
-public class JsonUtils {
+public class JsonUtils extends Utils {
 
     //
     // NOT NULL METHODS
@@ -27,7 +27,8 @@ public class JsonUtils {
      *
      * @return JsonObject
      */
-    public static JsonObject optJsonObjectNotNull(JsonObject json, String key, JsonObject fallback) {
+    public static JsonObject optJsonObjectNotNull(JsonObject json, String key, JsonObject fallback)
+    {
         try {
             return checkParams(json, key) ? json.get(key).getAsJsonObject() : fallback;
         } catch (Exception e) {
@@ -44,7 +45,8 @@ public class JsonUtils {
      *
      * @return JsonArray
      */
-    public static JsonArray optJsonArrayNotNull(JsonObject json, String key, JsonArray fallback) {
+    public static JsonArray optJsonArrayNotNull(JsonObject json, String key, JsonArray fallback)
+    {
         try {
             return checkParams(json, key) ? json.get(key).getAsJsonArray() : fallback;
         } catch (Exception e) {
@@ -61,7 +63,8 @@ public class JsonUtils {
      *
      * @return String
      */
-    public static String optStringNotNull(JsonObject json, String key, String fallback) {
+    public static String optStringNotNull(JsonObject json, String key, String fallback)
+    {
         try {
             return checkParams(json, key) ? json.get(key).getAsString() : fallback;
         } catch (Exception e) {
@@ -78,7 +81,8 @@ public class JsonUtils {
      *
      * @return char
      */
-    public static char optCharNotNull(JsonObject json, String key, char fallback) {
+    public static char optCharNotNull(JsonObject json, String key, char fallback)
+    {
         try {
             return checkParams(json, key) ? json.get(key).getAsCharacter() : fallback;
         } catch (Exception e) {
@@ -95,7 +99,8 @@ public class JsonUtils {
      *
      * @return boolean
      */
-    public static boolean optBooleanNotNull(JsonObject json, String key, boolean fallback) {
+    public static boolean optBooleanNotNull(JsonObject json, String key, boolean fallback)
+    {
         try {
             return checkParams(json, key) ? json.get(key).getAsBoolean() : fallback;
         } catch (Exception e) {
@@ -112,7 +117,8 @@ public class JsonUtils {
      *
      * @return BigDecimal
      */
-    public static BigDecimal optBigDecimalNotNull(JsonObject json, String key, BigDecimal fallback) {
+    public static BigDecimal optBigDecimalNotNull(JsonObject json, String key, BigDecimal fallback)
+    {
         try {
             return checkParams(json, key) ? json.get(key).getAsBigDecimal() : fallback;
         } catch (Exception e) {
@@ -129,7 +135,8 @@ public class JsonUtils {
      *
      * @return BigInteger
      */
-    public static BigInteger optBigIntegerNotNull(JsonObject json, String key, BigInteger fallback) {
+    public static BigInteger optBigIntegerNotNull(JsonObject json, String key, BigInteger fallback)
+    {
         try {
             return checkParams(json, key) ? json.get(key).getAsBigInteger() : fallback;
         } catch (Exception e) {
@@ -146,7 +153,8 @@ public class JsonUtils {
      *
      * @return byte
      */
-    public static byte optByteNotNull(JsonObject json, String key, byte fallback) {
+    public static byte optByteNotNull(JsonObject json, String key, byte fallback)
+    {
         try {
             return checkParams(json, key) ? json.get(key).getAsByte() : fallback;
         } catch (Exception e) {
@@ -163,7 +171,8 @@ public class JsonUtils {
      *
      * @return short
      */
-    public static short optShortNotNull(JsonObject json, String key, short fallback) {
+    public static short optShortNotNull(JsonObject json, String key, short fallback)
+    {
         try {
             return checkParams(json, key) ? json.get(key).getAsShort() : fallback;
         } catch (Exception e) {
@@ -180,7 +189,8 @@ public class JsonUtils {
      *
      * @return int
      */
-    public static int optIntNotNull(JsonObject json, String key, int fallback) {
+    public static int optIntNotNull(JsonObject json, String key, int fallback)
+    {
         try {
             return checkParams(json, key) ? json.get(key).getAsInt() : fallback;
         } catch (Exception e) {
@@ -197,7 +207,8 @@ public class JsonUtils {
      *
      * @return long
      */
-    public static long optLongNotNull(JsonObject json, String key, long fallback) {
+    public static long optLongNotNull(JsonObject json, String key, long fallback)
+    {
         try {
             return checkParams(json, key) ? json.get(key).getAsLong() : fallback;
         } catch (Exception e) {
@@ -214,7 +225,8 @@ public class JsonUtils {
      *
      * @return float
      */
-    public static float optFloatNotNull(JsonObject json, String key, float fallback) {
+    public static float optFloatNotNull(JsonObject json, String key, float fallback)
+    {
         try {
             return checkParams(json, key) ? json.get(key).getAsFloat() : fallback;
         } catch (Exception e) {
@@ -231,7 +243,8 @@ public class JsonUtils {
      *
      * @return double
      */
-    public static double optDoubleNotNull(JsonObject json, String key, double fallback) {
+    public static double optDoubleNotNull(JsonObject json, String key, double fallback)
+    {
         try {
             return checkParams(json, key) ? json.get(key).getAsDouble() : fallback;
         } catch (Exception e) {
@@ -251,7 +264,8 @@ public class JsonUtils {
      *
      * @return JsonObject
      */
-    public static JsonObject getJsonObject(JsonObject json, String key) {
+    public static JsonObject getJsonObject(JsonObject json, String key)
+    {
         try {
             return json.get(key) == null || json.get(key).isJsonNull() ? null : json.get(key).getAsJsonObject();
         } catch (Exception e) {
@@ -267,7 +281,8 @@ public class JsonUtils {
      *
      * @return JsonArray
      */
-    public static JsonArray getJsonArray(JsonObject json, String key) {
+    public static JsonArray getJsonArray(JsonObject json, String key)
+    {
         try {
             return json.get(key) == null ? null : json.get(key).getAsJsonArray();
         } catch (Exception e) {
@@ -283,7 +298,8 @@ public class JsonUtils {
      *
      * @return JsonString
      */
-    public static String getString(JsonObject json, String key) {
+    public static String getString(JsonObject json, String key)
+    {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsString());
         } catch (Exception e) {
@@ -299,7 +315,8 @@ public class JsonUtils {
      *
      * @return Character
      */
-    public static Character getChar(JsonObject json, String key) {
+    public static Character getChar(JsonObject json, String key)
+    {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsCharacter());
         } catch (Exception e) {
@@ -315,7 +332,8 @@ public class JsonUtils {
      *
      * @return Boolean
      */
-    public static Boolean getBoolean(JsonObject json, String key) {
+    public static Boolean getBoolean(JsonObject json, String key)
+    {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsBoolean());
         } catch (Exception e) {
@@ -331,7 +349,8 @@ public class JsonUtils {
      *
      * @return BigDecimal
      */
-    public static BigDecimal getBigDecimal(JsonObject json, String key) {
+    public static BigDecimal getBigDecimal(JsonObject json, String key)
+    {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsBigDecimal());
         } catch (Exception e) {
@@ -347,7 +366,8 @@ public class JsonUtils {
      *
      * @return BigInteger
      */
-    public static BigInteger getBigInteger(JsonObject json, String key) {
+    public static BigInteger getBigInteger(JsonObject json, String key)
+    {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsBigInteger());
         } catch (Exception e) {
@@ -363,7 +383,8 @@ public class JsonUtils {
      *
      * @return Byte
      */
-    public static Byte getByte(JsonObject json, String key) {
+    public static Byte getByte(JsonObject json, String key)
+    {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsByte());
         } catch (Exception e) {
@@ -379,7 +400,8 @@ public class JsonUtils {
      *
      * @return Short
      */
-    public static Short getShort(JsonObject json, String key) {
+    public static Short getShort(JsonObject json, String key)
+    {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsShort());
         } catch (Exception e) {
@@ -395,7 +417,8 @@ public class JsonUtils {
      *
      * @return Integer
      */
-    public static Integer getInt(JsonObject json, String key) {
+    public static Integer getInt(JsonObject json, String key)
+    {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsInt());
         } catch (Exception e) {
@@ -411,7 +434,8 @@ public class JsonUtils {
      *
      * @return Long
      */
-    public static Long getLong(JsonObject json, String key) {
+    public static Long getLong(JsonObject json, String key)
+    {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsLong());
         } catch (Exception e) {
@@ -427,7 +451,8 @@ public class JsonUtils {
      *
      * @return Float
      */
-    public static Float getFloat(JsonObject json, String key) {
+    public static Float getFloat(JsonObject json, String key)
+    {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsFloat());
         } catch (Exception e) {
@@ -443,7 +468,8 @@ public class JsonUtils {
      *
      * @return Double
      */
-    public static Double getDouble(JsonObject json, String key) {
+    public static Double getDouble(JsonObject json, String key)
+    {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsDouble());
         } catch (Exception e) {
