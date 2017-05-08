@@ -17,6 +17,6 @@ public class MainActivity extends AppCompatActivity {
         o.addProperty("test", true);
         Boolean b = JsonUtils.getBoolean(o, "test");
 
-        LogUtils.d(com.honzar.adtutils.sampleApp.BuildConfig.DEBUG, MainActivity.class.getName(), "fff");
+        LogUtils.d(com.honzar.adtutils.sampleApp.BuildConfig.DEBUG, MainActivity.class.getName(), "test: " + b);
     }
 }

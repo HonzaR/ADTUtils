@@ -13,7 +13,7 @@ import java.util.Date;
  * honzar@appsdevteam.com
  */
 
-public class MeasuresUtils extends Utils {
+public class MeasureUtils extends Utils {
 
 
     // DATE AND TIME
