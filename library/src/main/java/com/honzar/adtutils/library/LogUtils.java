@@ -9,7 +9,7 @@ import android.util.Log;
  * LogUtils class provides user logging methods with different parameters.
  */
 
-public class LogUtils {
+public class LogUtils extends Utils {
 
 
     // VERBOSE

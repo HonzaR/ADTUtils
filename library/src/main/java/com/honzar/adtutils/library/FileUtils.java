@@ -261,13 +261,23 @@ public class FileUtils extends Utils {
         context.sendBroadcast(mediaScanIntent);
     }
 
-        public static File getAlbumStorageDir(String albumName)
-        {
-            // Get the directory for the user's public pictures directory.
-            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), albumName);
-            if (!file.mkdirs()) {
-                Log.e("Util Error", "Directory not created");
-            }
-            return file;
+    public static File getAlbumStorageDir(String albumName)
+    {
+        // Get the directory for the user's public pictures directory.
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), albumName);
+        if (!file.mkdirs()) {
+            Log.e("Util Error", "Directory not created");
         }
+        return file;
+    }
+
+    /**
+     * Returns file prefix according to SDK version
+     *
+     * @return files prefix
+     */
+    public static String getFilesPrefix()
+    {
+        return AppPropertyUtils.isThisDeviceNougatAndHigher() ? "content://" : "file://";
+    }
 }

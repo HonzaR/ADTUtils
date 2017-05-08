@@ -26,7 +26,7 @@ import java.io.File;
  * honzar@appsdevteam.com
  */
 
-public class IntentUtils {
+public class IntentUtils extends Utils {
 
 
     //

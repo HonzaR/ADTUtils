@@ -392,19 +392,6 @@ public class Utils {
     }
 
 
-    // OTHERS
-
-    /**
-     * Returns file prefix according to SDK version
-     *
-     * @return files prefix
-     */
-    public static String getFilesPrefix()
-    {
-        return AppPropertyUtils.isThisDeviceNougatAndHigher() ? "content://" : "file://";
-    }
-
-
     // PRIVATE METHODS
 
     static boolean checkNull(Object o)

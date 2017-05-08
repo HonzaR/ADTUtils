@@ -5,7 +5,7 @@ import android.location.Location;
 import java.util.Arrays;
 import java.util.List;
 
-public class EqualsUtils {
+public class EqualsUtils extends Utils {
 
     /**
      * Returns objects hashcode

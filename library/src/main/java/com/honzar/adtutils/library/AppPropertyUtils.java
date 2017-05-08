@@ -11,7 +11,7 @@ import android.os.Build;
  * honzar@appsdevteam.com
  */
 
-public class AppPropertyUtils {
+public class AppPropertyUtils extends Utils {
 
 
     // CHECK DEVICE SDK VERSION
