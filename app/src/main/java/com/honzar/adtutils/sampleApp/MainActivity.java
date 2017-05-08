@@ -13,8 +13,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        boolean b = JsonUtils.getBoolean(new JsonObject(), "test");
+        JsonObject o = new JsonObject();
+        o.addProperty("test", true);
+        Boolean b = JsonUtils.getBoolean(o, "test");
 
-        LogUtils.d(com.honzar.adtutils.sampleApp.BuildConfig.DEBUG, MainActivity.class.getName(), Byte.parseByte("fff", 2));
+        LogUtils.d(com.honzar.adtutils.sampleApp.BuildConfig.DEBUG, MainActivity.class.getName(), "fff");
     }
 }
