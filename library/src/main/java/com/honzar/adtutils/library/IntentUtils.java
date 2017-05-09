@@ -114,7 +114,7 @@ public class IntentUtils extends Utils {
             return false;
         }
 
-        if (Utils.checkCanDisplayPdf(context)) {
+        if (DeviceUtils.checkCanDisplayPdf(context)) {
 
             File file = new File(documentPath);
             if (!file.isAbsolute()) {
@@ -198,7 +198,7 @@ public class IntentUtils extends Utils {
 
             if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
 
-                if (AppPropertyUtils.isThisDeviceNougatAndHigher()) {
+                if (VersionUtils.isThisDeviceNougatAndHigher()) {
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", outputFile));
                 } else {
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));
@@ -321,7 +321,7 @@ public class IntentUtils extends Utils {
             return false;
         }
 
-        if (Utils.checkCanDisplayImage(context)) {
+        if (DeviceUtils.checkCanDisplayImage(context)) {
 
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -396,11 +396,11 @@ public class IntentUtils extends Utils {
             return false;
         }
 
-        if (!Utils.checkNfcSupported(context)) {
+        if (!DeviceUtils.checkNfcSupported(context)) {
             return false;
         }
 
-        if (!Utils.checkNfcEnabled(context)) {
+        if (!DeviceUtils.checkNfcEnabled(context)) {
             return false;
         }
 
@@ -439,7 +439,7 @@ public class IntentUtils extends Utils {
             return false;
         }
 
-        if (Utils.checkBluetoothEnabled(context)) {
+        if (DeviceUtils.checkBluetoothEnabled(context)) {
             return true;
         }
 
@@ -466,7 +466,7 @@ public class IntentUtils extends Utils {
             return false;
         }
 
-        if (Utils.checkWifiEnabled(context)) {
+        if (DeviceUtils.checkWifiEnabled(context)) {
             return true;
         }
 
@@ -496,7 +496,7 @@ public class IntentUtils extends Utils {
             return false;
         }
 
-        if (Utils.checkMobileDataConnectionEnabled(context)) {
+        if (DeviceUtils.checkMobileDataConnectionEnabled(context)) {
             return true;
         }
 
@@ -524,7 +524,7 @@ public class IntentUtils extends Utils {
             return false;
         }
 
-        if (Utils.checkLocationEnabled(context)) {
+        if (DeviceUtils.checkLocationEnabled(context)) {
             return true;
         }
 
