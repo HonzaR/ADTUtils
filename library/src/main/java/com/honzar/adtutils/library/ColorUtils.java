@@ -26,11 +26,11 @@ public class ColorUtils extends Utils {
      */
     public static String getHtmlColor(int color)
     {
-        if (color > 0) {
+        if (color < 0 || color > 0xffffff) {
             return null;
         }
         color = color & 0x00FFFFFF;
-        return "#" + String.format("%06X", color);
+        return "#" + String.format("%06x", color);
     }
 
     /**
@@ -44,7 +44,7 @@ public class ColorUtils extends Utils {
      */
     public static Drawable getTintedDrawableIcon(Context context, int iconResourceId, int colorResourceId)
     {
-        if (!checkNull(context) && iconResourceId > 0 && colorResourceId > 0) {
+        if (checkNull(context) || iconResourceId < 0 || colorResourceId < 0) {
             return null;
         }
 
@@ -63,7 +63,7 @@ public class ColorUtils extends Utils {
      */
     public static int getRandomColor(Context context)
     {
-        if (!checkNull(context)) {
+        if (checkNull(context)) {
             return 0;
         }
         Random rnd = new Random();
