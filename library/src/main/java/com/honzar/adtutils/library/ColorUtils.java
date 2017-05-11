@@ -55,17 +55,12 @@ public class ColorUtils extends Utils {
     }
 
     /**
-     * Returns random color or -1 in case of error
+     * Returns random color
      *
-     * @param context
-     *
-     * @return random color or -1 in case of error
+     * @return random color
      */
-    public static int getRandomColor(Context context)
+    public static int getRandomColor()
     {
-        if (checkNull(context)) {
-            return 0;
-        }
         Random rnd = new Random();
         return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
     }

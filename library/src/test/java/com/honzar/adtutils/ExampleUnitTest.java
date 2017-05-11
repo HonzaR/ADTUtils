@@ -5,6 +5,7 @@ import com.honzar.adtutils.library.ColorUtils;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -12,8 +13,6 @@ import static org.junit.Assert.assertEquals;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
-
-
 
     @Test
     public void color_utils_test_1() throws Exception {
@@ -29,5 +28,11 @@ public class ExampleUnitTest {
     @Test
     public void color_utils_test_2() throws Exception {
         assertEquals(null, ColorUtils.getTintedDrawableIcon(null, 1, 1));
+    }
+
+    @Test
+    public void color_utils_test_3() throws Exception {
+        assertNotEquals(0x000000, ColorUtils.makeColorTransparent(0x000000, 0.5f));
+        assertEquals(2130706432, ColorUtils.makeColorTransparent(0x000000, 0.5f));
     }
 }
