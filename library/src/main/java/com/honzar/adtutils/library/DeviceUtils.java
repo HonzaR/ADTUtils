@@ -262,6 +262,9 @@ public class DeviceUtils extends Utils {
      */
     public static boolean isTablet(Context context)
     {
+        if (checkNull(context)) {
+            return false;
+        }
         return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
@@ -272,6 +275,9 @@ public class DeviceUtils extends Utils {
      */
     public static boolean isSmartphone(Context context)
     {
+        if (checkNull(context)) {
+            return false;
+        }
         return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
