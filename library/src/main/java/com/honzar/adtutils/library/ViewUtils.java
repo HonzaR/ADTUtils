@@ -3,6 +3,7 @@ package com.honzar.adtutils.library;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -493,4 +494,49 @@ public class ViewUtils extends Utils {
         }
         return true;
     }
+
+
+    // SYSTEM BARS
+
+    /**
+     * Get system navigation bar height
+     *
+     * @param context
+     *
+     * @return number bigger than 0 if there is some navigation bar, 0 otherwise
+     */
+    public static int getSystemNavigationBarHeight(Context context)
+    {
+        if (context == null) {
+            return 0;
+        }
+
+        Resources resources = context.getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return resources.getDimensionPixelSize(resourceId);
+        }
+        return 0;
+    }
+
+    /**
+     * Get system status bar height
+     *
+     * @param context
+     *
+     * @return number bigger than 0 if there is some status bar, 0 otherwise
+     */
+    public static int getSystemStatusBarHeight(Context context)
+    {
+        if (context == null) {
+            return 0;
+        }
+
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return 0;
+    }
+
 }

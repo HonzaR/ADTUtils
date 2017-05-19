@@ -82,7 +82,7 @@ public class IntentUtils extends Utils {
      */
     public static boolean openBrowserApp(Context context, String url)
     {
-        if (context == null || url == null || !url.isEmpty()) {
+        if (context == null || url == null || url.isEmpty()) {
             return false;
         }
 
