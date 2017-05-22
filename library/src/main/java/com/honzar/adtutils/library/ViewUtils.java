@@ -511,6 +511,10 @@ public class ViewUtils extends Utils {
             return 0;
         }
 
+        if (!DeviceUtils.checkDeviceHasSoftwareNavBar(context)) {
+            return 0;
+        }
+
         Resources resources = context.getResources();
         int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
         if (resourceId > 0) {
@@ -529,10 +533,6 @@ public class ViewUtils extends Utils {
     public static int getSystemStatusBarHeight(Context context)
     {
         if (context == null) {
-            return 0;
-        }
-
-        if (!DeviceUtils.checkDeviceHasSoftwareNavBar(context)) {
             return 0;
         }
 
