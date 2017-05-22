@@ -172,6 +172,25 @@ public class DeviceUtils extends Utils {
     }
 
     /**
+     * Checks if device has software navigation bar
+     *
+     * @param context
+     *
+     * @return true/false
+     */
+    public static boolean checkDeviceHasSoftwareNavBar(Context context)
+    {
+        if (checkNull(context)) {
+            return false;
+        }
+        int resId = context.getResources().getIdentifier("config_showNavigationBar", "bool", "android");
+        if (resId > 0) {
+            return resId > 0 && context.getResources().getBoolean(resId);
+        }
+        return false;
+    }
+
+    /**
      * Checks if device supports NFC
      *
      * @param context

@@ -532,6 +532,10 @@ public class ViewUtils extends Utils {
             return 0;
         }
 
+        if (!DeviceUtils.checkDeviceHasSoftwareNavBar(context)) {
+            return 0;
+        }
+
         int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
             return context.getResources().getDimensionPixelSize(resourceId);
