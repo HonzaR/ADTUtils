@@ -479,7 +479,7 @@ public class ViewUtils extends Utils {
      *
      * @return true if screen state have been changed, false otherwise
      */
-    public static boolean setScreenTouchableState(Context context, boolean enable)
+    public static boolean setScreenTouchable(Context context, boolean enable)
     {
         if (context == null) {
             return false;
@@ -487,7 +487,7 @@ public class ViewUtils extends Utils {
 
         Activity activity = (Activity) context;
 
-        if (enable) {
+        if (!enable) {
             activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         } else {
             activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
