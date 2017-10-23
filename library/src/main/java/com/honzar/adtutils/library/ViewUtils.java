@@ -353,6 +353,30 @@ public class ViewUtils extends Utils {
     // SCREEN
 
     /**
+     * Keep screen on or reset screen state according to set flag
+     *
+     * @param context
+     * @param enable
+     *
+     * @return true if screen state has been changed, false otherwise
+     */
+    public static boolean keepScreenOn(Context context, boolean enable)
+    {
+        if (context == null) {
+            return false;
+        }
+
+        Activity activity = (Activity) context;
+
+        if (enable) {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        } else {
+            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+        return true;
+    }
+
+    /**
      * Returns usable screen height without actionBar height, navigation bar height and status bar height
      *
      * @param context
@@ -477,7 +501,7 @@ public class ViewUtils extends Utils {
      * @param context
      * @param enable
      *
-     * @return true if screen state have been changed, false otherwise
+     * @return true if screen state has been changed, false otherwise
      */
     public static boolean setScreenTouchable(Context context, boolean enable)
     {

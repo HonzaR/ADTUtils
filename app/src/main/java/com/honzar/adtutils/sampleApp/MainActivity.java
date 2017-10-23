@@ -27,5 +27,7 @@ public class MainActivity extends AppCompatActivity {
         LogUtils.d(com.honzar.adtutils.sampleApp.BuildConfig.DEBUG, MainActivity.class.getName(), "test status bar height: " + ViewUtils.getSystemStatusBarHeight(MainActivity.this));
 
         LogUtils.d(true, "test", DateTimeUtils.getFormattedDateAndTimeInWordsWithSystemLocale(MainActivity.this, new Date()));
+
+        ViewUtils.keepScreenOn(MainActivity.this, true);
     }
 }
