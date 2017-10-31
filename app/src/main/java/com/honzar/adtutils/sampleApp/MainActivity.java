@@ -29,5 +29,8 @@ public class MainActivity extends AppCompatActivity {
         LogUtils.d(true, "test", DateTimeUtils.getFormattedDateAndTimeInWordsWithSystemLocale(MainActivity.this, new Date()));
 
         ViewUtils.keepScreenOn(MainActivity.this, true);
+
+        LogUtils.d(true, "TEST", ""+DeviceUtils.checkGooglePlayServicesAvailable(MainActivity.this));
+        LogUtils.d(true, "TEST", DeviceUtils.checkGooglePlayServicesResultCode(MainActivity.this));
     }
 }
