@@ -3,6 +3,7 @@ package com.honzar.adtutils.library;
 import android.content.Context;
 import android.text.format.DateUtils;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -99,5 +100,52 @@ public class DateTimeUtils extends Utils {
         }
 
         return DateUtils.formatDateTime(context, date.getTime(), DateUtils.FORMAT_SHOW_YEAR);
+    }
+
+    /**
+     * Returns formatted date in words according to system locale
+     *
+     * @param context
+     * @param dateStart
+     * @param dateEnd
+     *
+     * @return formatted date and time interval or empty string in case of failure
+     */
+    public static String getFormattedDateAndTimeIntervalWithSystemLocale(Context context, Date dateStart, Date dateEnd)
+    {
+        if (checkNull(context) || checkNull(dateStart) || checkNull(dateEnd)) {
+            return "";
+        }
+
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.setTime(dateStart);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        long startDateInMillis = calendar.getTimeInMillis();
+
+        calendar.setTime(dateEnd);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        long endDateInMillis = calendar.getTimeInMillis();
+
+        String resultDate = "";
+        if (startDateInMillis == endDateInMillis) {
+            resultDate += getFormattedJustDateWithSystemLocale(context, dateStart);
+            resultDate += " ";
+            resultDate += getFormattedJustTimeWithSystemLocale(context, dateStart);
+            resultDate += " - ";
+            resultDate += getFormattedJustTimeWithSystemLocale(context, dateEnd);
+        } else {
+            resultDate += getFormattedDateAndTimeWithSystemLocale(context, dateStart);
+            resultDate += " - ";
+            resultDate += getFormattedDateAndTimeWithSystemLocale(context, dateEnd);
+        }
+
+        return resultDate;
     }
 }
