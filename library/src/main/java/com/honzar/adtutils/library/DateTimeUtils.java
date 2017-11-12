@@ -179,7 +179,7 @@ public class DateTimeUtils extends Utils {
             builder.append(min);
             builder.append(":");
         }
-        if (min > 0) {
+        if (sec > 0) {
             builder.append(sec);
             builder.append(withMilliseconds ? "." : "");
         }
