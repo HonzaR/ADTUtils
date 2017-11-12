@@ -35,5 +35,10 @@ public class MainActivity extends AppCompatActivity {
 
         LogUtils.d(true, "TEST DATE RANGE", DateTimeUtils.getFormattedDateAndTimeIntervalWithSystemLocale(MainActivity.this, 	new Date(1509959820000L), new Date(1510136220000L)));
         LogUtils.d(true, "TEST DATE RANGE", DateTimeUtils.getFormattedDateAndTimeIntervalWithSystemLocale(MainActivity.this, 	new Date(1509963420000L), new Date(1509992820000L)));
+
+        LogUtils.d(true, "TEST TIME DURATION", DateTimeUtils.getFormattedTimeDuration(MainActivity.this, 1510515505193L, true));
+        LogUtils.d(true, "TEST TIME DURATION", DateTimeUtils.getFormattedTimeDuration(MainActivity.this, 1510515505193L, false));
+        LogUtils.d(true, "TEST TIME DURATION", DateTimeUtils.getFormattedTimeDuration(MainActivity.this, 13243243, true));
+        LogUtils.d(true, "TEST TIME DURATION", DateTimeUtils.getFormattedTimeDuration(MainActivity.this, 13243243, false));
     }
 }

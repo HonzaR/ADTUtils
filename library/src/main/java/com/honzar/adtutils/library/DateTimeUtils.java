@@ -5,6 +5,8 @@ import android.text.format.DateUtils;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Honza Rychnovský on 15.06.17.
@@ -147,5 +149,44 @@ public class DateTimeUtils extends Utils {
         }
 
         return resultDate;
+    }
+
+    /**
+     * Returns formatted time duration
+     *
+     * @param context
+     * @param milliseconds
+     *
+     * @return formatted time duration or empty string in case of failure
+     */
+    public static String getFormattedTimeDuration(Context context, long milliseconds, boolean withMilliseconds)
+    {
+        if (checkNull(context) || milliseconds < 0) {
+            return "";
+        }
+
+        StringBuilder builder = new StringBuilder("");
+        final long hr = TimeUnit.MILLISECONDS.toHours(milliseconds);
+        final long min = TimeUnit.MILLISECONDS.toMinutes(milliseconds) % 60;
+        final long sec = TimeUnit.MILLISECONDS.toSeconds(milliseconds) % 60;
+        final long millis = TimeUnit.MILLISECONDS.toMillis(milliseconds) % 1000;
+
+        if (hr > 0) {
+            builder.append(hr);
+            builder.append(":");
+        }
+        if (min > 0) {
+            builder.append(min);
+            builder.append(":");
+        }
+        if (min > 0) {
+            builder.append(sec);
+            builder.append(withMilliseconds ? "." : "");
+        }
+        if (withMilliseconds && millis > 0) {
+            builder.append(millis);
+        }
+
+        return builder.toString();
     }
 }
