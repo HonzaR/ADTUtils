@@ -2,6 +2,7 @@ package com.honzar.adtutils.library;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,6 +10,7 @@ import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
 import android.os.Build;
@@ -334,6 +336,37 @@ public class DeviceUtils extends Utils {
         } catch (Exception e) {
             return -1;
         }
+    }
+
+    /**
+     * Opens Google Play Store page in Play Store app if installed or in browser.
+     *
+     * @param context
+     * @param packageName package name of app developer wants to open on Play Store
+     *
+     * @return true/false
+     */
+    public static boolean openAppPlayStore(Context context, String packageName)
+    {
+        if (checkNull(context) || checkNull(packageName) || packageName.isEmpty())
+            return false;
+
+        Uri rateUri = Uri.parse("market://details?id=" + packageName);
+        Intent goToMarket = new Intent(Intent.ACTION_VIEW, rateUri);
+
+        // To count with Play market backstack, After pressing back button,
+        // to taken back to our application, we need to add following flags to intent.
+        goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+
+        try {
+            context.startActivity(goToMarket);
+        } catch (ActivityNotFoundException e) {
+            Uri storeUri = Uri.parse("http://play.google.com/store/apps/details?id=" + packageName);
+            context.startActivity(new Intent(Intent.ACTION_VIEW, storeUri));
+        }
+        return true;
     }
 
 }
