@@ -40,5 +40,8 @@ public class MainActivity extends AppCompatActivity {
         LogUtils.d(true, "TEST TIME DURATION", DateTimeUtils.getFormattedTimeDuration(MainActivity.this, 1510515505193L, false));
         LogUtils.d(true, "TEST TIME DURATION", DateTimeUtils.getFormattedTimeDuration(MainActivity.this, 13243243, true));
         LogUtils.d(true, "TEST TIME DURATION", DateTimeUtils.getFormattedTimeDuration(MainActivity.this, 13243243, false));
+
+        LogUtils.d(true, "TEST MD5 hash input", "123456789qwerty");
+        LogUtils.d(true, "TEST MD5 hash output", HashingUtils.md5("123456789qwerty"));
     }
 }
