@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -14,6 +15,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
@@ -565,6 +567,47 @@ public class ViewUtils extends Utils {
             return context.getResources().getDimensionPixelSize(resourceId);
         }
         return 0;
+    }
+
+    /**
+     * Set system status bar height
+     *
+     * @param activity
+     * @param colorResId
+     *
+     * @return true if system status bar color state has been changed, false otherwise
+     */
+    public static boolean setStatusBarColorIfCan(Activity activity, int colorResId)
+    {
+        if (activity == null || !DeviceUtils.isLollipopOrHigher()) {
+            return false;
+        }
+
+        Window window = activity.getWindow();
+        window.setStatusBarColor(ContextCompat.getColor(activity, colorResId));
+
+        return true;
+    }
+
+
+    /**
+     * Set system navigation bar height
+     *
+     * @param activity
+     * @param colorResId
+     *
+     * @return true if system navigation bar color state has been changed, false otherwise
+     */
+    public static boolean setNavigationBarColorIfCan(Activity activity, int colorResId)
+    {
+        if (activity == null || !DeviceUtils.isLollipopOrHigher()) {
+            return false;
+        }
+
+        Window window = activity.getWindow();
+        window.setNavigationBarColor(ContextCompat.getColor(activity, colorResId));
+
+        return true;
     }
 
 }

@@ -43,5 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
         LogUtils.d(true, "TEST MD5 hash input", "123456789qwerty");
         LogUtils.d(true, "TEST MD5 hash output", HashingUtils.md5("123456789qwerty"));
+
+        ViewUtils.setStatusBarColorIfCan(MainActivity.this, R.color.colorAppWhite);
+        ViewUtils.setNavigationBarColorIfCan(MainActivity.this, R.color.colorAppWhite);
     }
 }

@@ -369,4 +369,54 @@ public class DeviceUtils extends Utils {
         return true;
     }
 
+    //
+    // SDK VERSIONS
+    //
+
+    /**
+     * Checks if this device is Kitkat or higher
+     *
+     * @return true/false
+     */
+    public static boolean isKitkatOrHigher()
+    {
+        return Build.VERSION.SDK_INT >= 19;
+    }
+
+    /**
+     * Checks if this device is Lollipop or higher
+     *
+     * @return true/false
+     */
+    public static boolean isLollipopOrHigher()
+    {
+        return Build.VERSION.SDK_INT >= 21;
+    }
+    /**
+     * Checks if this device is Marshmallow or higher
+     *
+     * @return true/false
+     */
+    public static boolean isMarshmallowOrHigher()
+    {
+        return Build.VERSION.SDK_INT >= 23;
+    }
+    /**
+     * Checks if this device is Nougat or higher
+     *
+     * @return true/false
+     */
+    public static boolean isNougatOrHigher()
+    {
+        return Build.VERSION.SDK_INT >= 24;
+    }
+    /**
+     * Checks if this device is Oreo or higher
+     *
+     * @return true/false
+     */
+    public static boolean isOreoOrHigher()
+    {
+        return Build.VERSION.SDK_INT >= 26;
+    }
 }
