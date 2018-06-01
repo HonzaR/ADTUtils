@@ -46,5 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
         ViewUtils.setStatusBarColorIfCan(MainActivity.this, R.color.colorAppWhite);
         ViewUtils.setNavigationBarColorIfCan(MainActivity.this, R.color.colorAppWhite);
+
+        LogUtils.d(true, "Network type", VersionUtils.getNetworkTypeName(MainActivity.this));
     }
 }

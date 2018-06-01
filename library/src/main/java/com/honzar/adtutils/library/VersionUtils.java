@@ -2,6 +2,8 @@ package com.honzar.adtutils.library;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 
 /**
@@ -143,6 +145,33 @@ public class VersionUtils extends Utils {
         }
         catch (PackageManager.NameNotFoundException e) {
             return "err";
+        }
+    }
+
+    /**
+     * Returns human readable network type, e.g. WIFI or MOBILE-2G, ...
+     *
+     * @return network type string or "none" in case of error
+     */
+    public static String getNetworkTypeName(Context context)
+    {
+        String type = "none";
+        if (checkNull(context))
+            return type;
+
+        try {
+            NetworkInfo activeNetworkInfo = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
+
+            if (activeNetworkInfo == null)
+                return type;
+
+            type = activeNetworkInfo.getTypeName();
+            String subTypeName = activeNetworkInfo.getSubtypeName();
+
+            return type + (subTypeName != null && !subTypeName.isEmpty() ? "-" + subTypeName : "");
+
+        } catch (Exception e) {
+            return type;
         }
     }
 }
