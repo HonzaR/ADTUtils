@@ -121,9 +121,11 @@ public class IntentUtils extends Utils {
                 file = new File(context.getExternalFilesDir(null) + "/" + documentPath);
             }
 
+            Uri fileUri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", file);
+
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+                intent.setDataAndType(fileUri, "application/pdf");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
                 intent = Intent.createChooser(intent, chooserTitle);
