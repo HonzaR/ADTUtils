@@ -18,9 +18,6 @@ import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-
 /**
  * Created by Honza Rychnovský on 20.4.2017.
  * AppsDevTeam
@@ -302,40 +299,6 @@ public class DeviceUtils extends Utils {
             return false;
         }
         return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) < Configuration.SCREENLAYOUT_SIZE_LARGE;
-    }
-
-
-    // GOOGLE PLAY SERVICES
-
-    /**
-     * Returns true if this device has Google Play Services installed and up to date
-     *
-     * @return true/false
-     */
-    public static boolean checkGooglePlayServicesAvailable(Context context)
-    {
-        try {
-            GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
-            return (googleAPI.isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    /**
-     * Returns Google Play Services Availability result code
-     * Developer should compare result of this method with ConnectionResult constants
-     *
-     * @return result code integer
-     */
-    public static int checkGooglePlayServicesResultCode(Context context)
-    {
-        try {
-            GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
-            return googleAPI.isGooglePlayServicesAvailable(context);
-        } catch (Exception e) {
-            return -1;
-        }
     }
 
     /**

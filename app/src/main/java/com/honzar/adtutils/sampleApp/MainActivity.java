@@ -30,9 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
         ViewUtils.keepScreenOn(MainActivity.this, true);
 
-        LogUtils.d(true, "TEST", ""+DeviceUtils.checkGooglePlayServicesAvailable(MainActivity.this));
-        LogUtils.d(true, "TEST", DeviceUtils.checkGooglePlayServicesResultCode(MainActivity.this));
-
         LogUtils.d(true, "TEST DATE RANGE", DateTimeUtils.getFormattedDateAndTimeIntervalWithSystemLocale(MainActivity.this, 	new Date(1509959820000L), new Date(1510136220000L)));
         LogUtils.d(true, "TEST DATE RANGE", DateTimeUtils.getFormattedDateAndTimeIntervalWithSystemLocale(MainActivity.this, 	new Date(1509963420000L), new Date(1509992820000L)));
 
