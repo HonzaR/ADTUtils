@@ -45,5 +45,7 @@ public class MainActivity extends AppCompatActivity {
         ViewUtils.setNavigationBarColorIfCan(MainActivity.this, R.color.colorAppWhite);
 
         LogUtils.d(true, "Network type", VersionUtils.getNetworkTypeName(MainActivity.this));
+
+        IntentUtils.openFilePickerComponent(MainActivity.this,"video/*", "TEST TITLE", 101);
     }
 }

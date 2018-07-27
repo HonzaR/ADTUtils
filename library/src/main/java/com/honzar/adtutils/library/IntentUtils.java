@@ -283,23 +283,24 @@ public class IntentUtils extends Utils {
     }
 
     /**
-     * Opens image picker app and returns taken photo file in onActivityResult method
+     * Opens file picker app and returns chosen file in onActivityResult method
      *
      * @param context
+     * @param fileType
      * @param chooserTitle
      * @param resultCode
      *
      * @return true if succeed, false otherwise
      */
-    public static boolean openimagePickApp(Context context, String chooserTitle, int resultCode)
+    public static boolean openFilePickerComponent(Context context, String fileType, String chooserTitle, int resultCode)
     {
-        if (context == null) {
+        if (context == null || fileType == null) {
             return false;
         }
 
         try {
             Intent intent = new Intent();
-            intent.setType("image/*");
+            intent.setType(fileType);
             intent.setAction(Intent.ACTION_GET_CONTENT);
             intent = Intent.createChooser(intent, chooserTitle);
             ((Activity) context).startActivityForResult(intent, resultCode);
