@@ -1,6 +1,7 @@
 package com.honzar.adtutils.library;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ActivityNotFoundException;
@@ -167,7 +168,7 @@ public class IntentUtils extends Utils {
     }
 
     /**
-     * Opens camera app and returns taken photo file in onActivityResult method
+     * Opens camera app for photo and returns taken photo file in onActivityResult method
      *
      * @param context
      * @param requestCode
@@ -176,7 +177,7 @@ public class IntentUtils extends Utils {
      *
      * @return true if succeed, false otherwise
      */
-    public static boolean openCameraApp(Context context, int requestCode, boolean frontCamera, File outputFile)
+    public static boolean openCameraAppForPhoto(Context context, int requestCode, boolean frontCamera, File outputFile)
     {
         if (context == null || outputFile == null) {
             return false;
@@ -206,6 +207,54 @@ public class IntentUtils extends Utils {
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));
                 }
                 ((Activity)context).startActivityForResult(takePictureIntent, requestCode);
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
+    }
+
+    /**
+     * Opens camera app for video and returns taken video file in onActivityResult method
+     *
+     * @param context
+     * @param requestCode
+     * @param frontCamera
+     * @param outputFile
+     *
+     * @return true if succeed, false otherwise
+     */
+    public static boolean openCameraAppForVideo(Context context, int requestCode, boolean frontCamera, File outputFile)
+    {
+        if (context == null || outputFile == null) {
+            return false;
+        }
+
+        if (!outputFile.isFile() || outputFile.isDirectory() || !outputFile.exists() || !outputFile.canWrite()) {
+            return false;
+        }
+
+        try {
+            Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+
+            if (frontCamera) {  // try to open front camera
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    takeVideoIntent.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
+                } else {
+                    takeVideoIntent.putExtra("android.intent.extras.CAMERA_FACING", 1);
+                }
+            }
+
+            if (takeVideoIntent.resolveActivity(context.getPackageManager()) != null) {
+
+                if (VersionUtils.isThisDeviceNougatAndHigher()) {
+                    takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", outputFile));
+                } else {
+                    takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));
+                }
+                ((Activity)context).startActivityForResult(takeVideoIntent, requestCode);
                 return true;
             }
         } catch (Exception e) {
@@ -463,6 +512,7 @@ public class IntentUtils extends Utils {
      *
      * @return true if succeed, false otherwise
      */
+    @SuppressLint("MissingPermission")
     public static boolean turnWifiConnectionOn(Context context)
     {
         if (context == null) {
