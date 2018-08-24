@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.google.gson.JsonObject;
 import com.honzar.adtutils.library.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,11 +43,20 @@ public class MainActivity extends AppCompatActivity {
         LogUtils.d(true, "TEST MD5 hash input", "123456789qwerty");
         LogUtils.d(true, "TEST MD5 hash output", HashingUtils.md5("123456789qwerty"));
 
-        ViewUtils.setStatusBarColorIfCan(MainActivity.this, R.color.colorAppWhite);
-        ViewUtils.setNavigationBarColorIfCan(MainActivity.this, R.color.colorAppWhite);
+        //ViewUtils.setStatusBarColorIfCan(MainActivity.this, R.color.colorAppWhite);
+        //ViewUtils.setNavigationBarColorIfCan(MainActivity.this, R.color.colorAppWhite);
 
         LogUtils.d(true, "Network type", VersionUtils.getNetworkTypeName(MainActivity.this));
 
-        IntentUtils.openFilePickerComponent(MainActivity.this,"video/*", "TEST TITLE", 101);
+        //IntentUtils.openFilePickerComponent(MainActivity.this,"video/*", "TEST TITLE", 101);
+
+        File file = new File(getExternalFilesDir(null), "image.jpeg");
+        try {
+            file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        IntentUtils.openCameraAppForPhoto(MainActivity.this, -1, false, file, true);
     }
 }

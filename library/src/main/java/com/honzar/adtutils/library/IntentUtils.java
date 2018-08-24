@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ActivityNotFoundException;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -177,7 +178,7 @@ public class IntentUtils extends Utils {
      *
      * @return true if succeed, false otherwise
      */
-    public static boolean openCameraAppForPhoto(Context context, int requestCode, boolean frontCamera, File outputFile)
+    public static boolean openCameraAppForPhoto(Context context, int requestCode, boolean frontCamera, File outputFile, boolean addToGallery)
     {
         if (context == null || outputFile == null) {
             return false;
@@ -201,10 +202,18 @@ public class IntentUtils extends Utils {
 
             if (takePictureIntent.resolveActivity(context.getPackageManager()) != null) {
 
-                if (VersionUtils.isThisDeviceNougatAndHigher()) {
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", outputFile));
+                if (addToGallery) {
+                    takePictureIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.Images.Media.TITLE, outputFile.getName());
+                    Uri mCapturedImageURI = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
                 } else {
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));
+                    if (VersionUtils.isThisDeviceNougatAndHigher()) {
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", outputFile));
+                    } else {
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));
+                    }
                 }
                 ((Activity)context).startActivityForResult(takePictureIntent, requestCode);
                 return true;
@@ -225,7 +234,7 @@ public class IntentUtils extends Utils {
      *
      * @return true if succeed, false otherwise
      */
-    public static boolean openCameraAppForVideo(Context context, int requestCode, boolean frontCamera, File outputFile)
+    public static boolean openCameraAppForVideo(Context context, int requestCode, boolean frontCamera, File outputFile, boolean addToGallery)
     {
         if (context == null || outputFile == null) {
             return false;
@@ -249,11 +258,20 @@ public class IntentUtils extends Utils {
 
             if (takeVideoIntent.resolveActivity(context.getPackageManager()) != null) {
 
-                if (VersionUtils.isThisDeviceNougatAndHigher()) {
-                    takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", outputFile));
+                if (addToGallery) {
+                    takeVideoIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.Images.Media.TITLE, outputFile.getName());
+                    Uri mCapturedImageURI = context.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+                    takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
                 } else {
-                    takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));
+                    if (VersionUtils.isThisDeviceNougatAndHigher()) {
+                        takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", outputFile));
+                    } else {
+                        takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));
+                    }
                 }
+
                 ((Activity)context).startActivityForResult(takeVideoIntent, requestCode);
                 return true;
             }
