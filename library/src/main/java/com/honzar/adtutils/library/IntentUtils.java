@@ -204,10 +204,7 @@ public class IntentUtils extends Utils {
 
                 if (addToGallery) {
                     takePictureIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    ContentValues values = new ContentValues();
-                    values.put(MediaStore.Images.Media.TITLE, outputFile.getName());
-                    Uri mCapturedImageURI = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, addFileToGallery(context, outputFile, "image/*"));
                 } else {
                     if (VersionUtils.isThisDeviceNougatAndHigher()) {
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", outputFile));
@@ -260,10 +257,7 @@ public class IntentUtils extends Utils {
 
                 if (addToGallery) {
                     takeVideoIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    ContentValues values = new ContentValues();
-                    values.put(MediaStore.Images.Media.TITLE, outputFile.getName());
-                    Uri mCapturedImageURI = context.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
-                    takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
+                    takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, addFileToGallery(context, outputFile, "video/*"));
                 } else {
                     if (VersionUtils.isThisDeviceNougatAndHigher()) {
                         takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", outputFile));
@@ -279,6 +273,15 @@ public class IntentUtils extends Utils {
             return false;
         }
         return false;
+    }
+
+    private static Uri addFileToGallery(Context context, File file, String mimeType)
+    {
+        ContentValues values = new ContentValues(3);
+        values.put(MediaStore.Video.Media.TITLE, file.getName());
+        values.put(MediaStore.Video.Media.MIME_TYPE, mimeType);
+        values.put(MediaStore.Video.Media.DATA, file.getAbsolutePath());
+        return context.getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
     }
 
     /**
