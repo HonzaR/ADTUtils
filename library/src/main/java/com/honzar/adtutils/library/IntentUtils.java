@@ -16,6 +16,7 @@ import android.os.Build;
 import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Patterns;
@@ -324,7 +325,36 @@ public class IntentUtils extends Utils {
     }
 
     /**
-     * Opens phone call app with predefined phone number
+     * Opens phone call app with predefined phone number on dial screen
+     *
+     * @param context
+     * @param phoneNumber
+     *
+     * @return true if succeed, false otherwise
+     */
+    public static boolean openPhoneDialApp(Context context, String phoneNumber)
+    {
+        if (context == null || phoneNumber == null || phoneNumber.isEmpty()) {
+            return  false;
+        }
+
+        if (!Patterns.PHONE.matcher(phoneNumber).matches()) {
+            return false;
+        }
+
+        try {
+            final Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_DIAL);
+            sendIntent.setData(Uri.fromParts("tel", phoneNumber, null));
+            context.startActivity(sendIntent);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Opens phone call app with predefined phone number on dial screen
      *
      * @param context
      * @param phoneNumber
@@ -341,9 +371,13 @@ public class IntentUtils extends Utils {
             return false;
         }
 
+        if ( ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+
         try {
             final Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_DIAL);
+            sendIntent.setAction(Intent.ACTION_CALL);
             sendIntent.setData(Uri.fromParts("tel", phoneNumber, null));
             context.startActivity(sendIntent);
             return true;

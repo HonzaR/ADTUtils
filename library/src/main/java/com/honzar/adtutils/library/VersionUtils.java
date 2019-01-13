@@ -15,7 +15,9 @@ import android.os.Build;
 public class VersionUtils extends Utils {
 
 
-    // CHECK DEVICE SDK VERSION
+    //
+    // SDK VERSIONS
+    //
 
     /**
      * Returns true if is device Jelly Bean or higher SDK version
@@ -65,6 +67,26 @@ public class VersionUtils extends Utils {
     public static boolean isThisDeviceNougatAndHigher()
     {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N;
+    }
+
+    /**
+     * Checks if this device is Oreo or higher
+     *
+     * @return true/false
+     */
+    public static boolean isThisDeviceOreoOrHigher()
+    {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
+    }
+
+    /**
+     * Checks if this device is Oreo or higher
+     *
+     * @return true/false
+     */
+    public static boolean isThisDevicePieOrHigher()
+    {
+        return Build.VERSION.SDK_INT >= 28;
     }
 
     /**
