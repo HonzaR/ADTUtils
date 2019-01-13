@@ -10,7 +10,6 @@ import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
 import android.os.Build;
@@ -270,6 +269,28 @@ public class DeviceUtils extends Utils {
         Intent testIntent = new Intent(Intent.ACTION_VIEW);
         testIntent.setType("image/*");
         return packageManager.queryIntentActivities(testIntent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
+    }
+
+    /**
+     * Checks if app is installed in the device.
+     *
+     * @param context
+     * @param packageName
+     *
+     * @return true/false
+     */
+    public static boolean checkAppIsInstalled(Context context, String packageName)
+    {
+        if (checkNull(context) || checkNull(packageName) || packageName.isEmpty())
+            return false;
+
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            packageManager.getPackageInfo(packageName, 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {}
+
+        return false;
     }
 
 
