@@ -579,7 +579,7 @@ public class ViewUtils extends Utils {
      */
     public static boolean setStatusBarColorIfCan(Activity activity, int colorResId)
     {
-        if (activity == null || !DeviceUtils.isLollipopOrHigher()) {
+        if (activity == null || !VersionUtils.isThisDeviceLollipopOrHigher()) {
             return false;
         }
 
@@ -600,7 +600,7 @@ public class ViewUtils extends Utils {
      */
     public static boolean setNavigationBarColorIfCan(Activity activity, int colorResId)
     {
-        if (activity == null || !DeviceUtils.isLollipopOrHigher()) {
+        if (activity == null || !VersionUtils.isThisDeviceLollipopOrHigher()) {
             return false;
         }
 
