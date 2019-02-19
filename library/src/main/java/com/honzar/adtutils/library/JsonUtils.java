@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * Created by Honza Rychnovský on 19.4.2017.
@@ -252,6 +253,54 @@ public class JsonUtils extends Utils {
         }
     }
 
+    /**
+     * Returns Date under the key or fallback in case of error. Acceptable date format is according to ISO 8601 without millis (i.e. 2019-02-19T08:54Z).
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched double
+     * @param fallback - fallback is returned in case of any error
+     *
+     * @return date
+     */
+    public static Date optDateNotNull(JsonObject json, String key, Date fallback)
+    {
+        try {
+
+            if (checkParams(json, key)) {
+                String dateStr = json.get(key).getAsString();
+                return DateTimeUtils.decodeDateFromIsoString(dateStr);
+            }
+            return fallback;
+
+        } catch (Exception e) {
+            return fallback;
+        }
+    }
+
+    /**
+     * Returns Date with millis under the key or fallback in case of error. Acceptable date format is according to ISO 8601 without millis (i.e. 2019-02-19T08:54Z).
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched double
+     * @param fallback - fallback is returned in case of any error
+     *
+     * @return date
+     */
+    public static Date optDateWithMillisNotNull(JsonObject json, String key, Date fallback)
+    {
+        try {
+
+            if (checkParams(json, key)) {
+                String dateStr = json.get(key).getAsString();
+                return DateTimeUtils.decodeDateWithMillisFromIsoString(dateStr);
+            }
+            return fallback;
+
+        } catch (Exception e) {
+            return fallback;
+        }
+    }
+
     //
     // NULLABLE METHODS
     //
@@ -472,6 +521,40 @@ public class JsonUtils extends Utils {
     {
         try {
             return json.isJsonNull() ? null : (json.get(key) == null ? null : json.get(key).getAsDouble());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Returns Date under the key or null in case of error. Acceptable date format is according to ISO 8601 without millis (i.e. 2019-02-19T08:54Z).
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched double
+     *
+     * @return Date
+     */
+    public static Date getDate(JsonObject json, String key)
+    {
+        try {
+            return json.isJsonNull() ? null : (json.get(key) == null ? null : DateTimeUtils.decodeDateFromIsoString(json.get(key).getAsString()));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Returns Date with millis under the key or null in case of error. Acceptable date format is according to ISO 8601 without millis (i.e. 2019-02-19T08:54Z).
+     *
+     * @param json - object to be searched for
+     * @param key - key of searched double
+     *
+     * @return Date
+     */
+    public static Date getDateWithMillis(JsonObject json, String key)
+    {
+        try {
+            return json.isJsonNull() ? null : (json.get(key) == null ? null : DateTimeUtils.decodeDateWithMillisFromIsoString(json.get(key).getAsString()));
         } catch (Exception e) {
             return null;
         }

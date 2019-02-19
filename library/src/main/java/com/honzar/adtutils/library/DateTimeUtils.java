@@ -3,6 +3,8 @@ package com.honzar.adtutils.library;
 import android.content.Context;
 import android.text.format.DateUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -16,6 +18,51 @@ import java.util.concurrent.TimeUnit;
 
 public class DateTimeUtils extends Utils {
 
+    private static SimpleDateFormat simpleISO8601DateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
+    private static SimpleDateFormat simpleISO8601DateWithMillisFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.getDefault());
+
+
+    // PARSE
+
+    /**
+     * Returns Date object parsed from date string or current date in case of error.
+     *
+     * @param dateStr
+     *
+     * @return Date object parsed from date string or current date in case of error
+     */
+    public static Date decodeDateFromIsoString(String dateStr)
+    {
+        if (checkNull(dateStr)) {
+            return new Date();
+        }
+
+        try {
+            return simpleISO8601DateFormatter.parse(dateStr);
+        } catch (ParseException ex) {
+            return new Date();
+        }
+    }
+
+    /**
+     * Returns Date with millis object parsed from date string or current date in case of error.
+     *
+     * @param dateStr
+     *
+     * @return Date object with millis parsed from date string or current date in case of error
+     */
+    public static Date decodeDateWithMillisFromIsoString(String dateStr)
+    {
+        if (checkNull(dateStr)) {
+            return new Date();
+        }
+
+        try {
+            return simpleISO8601DateWithMillisFormatter.parse(dateStr);
+        } catch (ParseException ex) {
+            return new Date();
+        }
+    }
 
     // DATE AND TIME
 
