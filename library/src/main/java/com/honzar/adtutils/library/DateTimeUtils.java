@@ -22,7 +22,7 @@ public class DateTimeUtils extends Utils {
     private static SimpleDateFormat simpleISO8601DateWithMillisFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.getDefault());
 
 
-    // PARSE
+    // DECODE & ENCODE
 
     /**
      * Returns Date object parsed from date string or current date in case of error.
@@ -64,6 +64,42 @@ public class DateTimeUtils extends Utils {
         }
     }
 
+    /**
+     * Returns ISO 8601 string formatted from time
+     *
+     * @param millis
+     *
+     * @return ISO 8601 String or current date ISO String in case of error
+     */
+    public static String encodeMillisToIsoString(long millis)
+    {
+        if (millis < 0) {
+            return simpleISO8601DateFormatter.format(System.currentTimeMillis());
+        }
+
+        try {
+            return simpleISO8601DateFormatter.format(millis);
+        } catch(RuntimeException rte) {
+            return simpleISO8601DateFormatter.format(System.currentTimeMillis());
+        }
+    }
+
+    /**
+     * Returns ISO 8601 string formatted from time
+     *
+     * @param date
+     *
+     * @return ISO 8601 String or current date ISO String in case of error
+     */
+    public static String encodeMillisToIsoString(Date date)
+    {
+        if (date == null) {
+            return simpleISO8601DateFormatter.format(System.currentTimeMillis());
+        }
+
+        return encodeMillisToIsoString(date.getTime());
+    }
+
     // DATE AND TIME
 
     /**
@@ -74,13 +110,47 @@ public class DateTimeUtils extends Utils {
      *
      * @return formatted date and time or empty string in case of failure
      */
-    public static String getFormattedDateAndTimeWithSystemLocale(Context context, Date date)
+    public static String getFormattedDateAndTime(Context context, Date date)
     {
         if (checkNull(context) || checkNull(date)) {
             return "";
         }
 
         return DateUtils.formatDateTime(context, date.getTime(), DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_24HOUR);
+    }
+
+    /**
+     * Returns formatted date and time according to system locale
+     *
+     * @param context
+     * @param millis
+     *
+     * @return formatted date and time or empty string in case of failure
+     */
+    public static String getFormattedDateAndTime(Context context, long millis)
+    {
+        if (checkNull(context) || millis < 0) {
+            return "";
+        }
+
+        return DateUtils.formatDateTime(context, millis, DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_24HOUR);
+    }
+
+    /**
+     * Returns formatted date and time with date in words and according to system locale
+     *
+     * @param context
+     * @param millis
+     *
+     * @return formatted date and time or empty string in case of failure
+     */
+    public static String getFormattedDateAndTimeInWords(Context context, long millis)
+    {
+        if (checkNull(context) || millis < 0) {
+            return "";
+        }
+
+        return DateUtils.formatDateTime(context, millis, DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_24HOUR);
     }
 
     /**
@@ -91,7 +161,7 @@ public class DateTimeUtils extends Utils {
      *
      * @return formatted date and time or empty string in case of failure
      */
-    public static String getFormattedDateAndTimeInWordsWithSystemLocale(Context context, Date date)
+    public static String getFormattedDateAndTimeInWords(Context context, Date date)
     {
         if (checkNull(context) || checkNull(date)) {
             return "";
@@ -108,13 +178,30 @@ public class DateTimeUtils extends Utils {
      *
      * @return formatted time or empty string in case of failure
      */
-    public static String getFormattedJustTimeWithSystemLocale(Context context, Date date)
+    public static String getFormattedJustTime(Context context, Date date)
     {
         if (checkNull(context) || checkNull(date)) {
             return "";
         }
 
         return DateUtils.formatDateTime(context, date.getTime(), DateUtils.FORMAT_SHOW_TIME);
+    }
+
+    /**
+     * Returns formatted time according to system locale
+     *
+     * @param context
+     * @param millis
+     *
+     * @return formatted time or empty string in case of failure
+     */
+    public static String getFormattedJustTime(Context context, long millis)
+    {
+        if (checkNull(context) || millis < 0) {
+            return "";
+        }
+
+        return DateUtils.formatDateTime(context, millis, DateUtils.FORMAT_SHOW_TIME);
     }
 
     /**
@@ -125,13 +212,64 @@ public class DateTimeUtils extends Utils {
      *
      * @return formatted date or empty string in case of failure
      */
-    public static String getFormattedJustDateWithSystemLocale(Context context, Date date)
+    public static String getFormattedJustDate(Context context, Date date)
     {
         if (checkNull(context) || checkNull(date)) {
             return "";
         }
 
         return DateUtils.formatDateTime(context, date.getTime(), DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_NUMERIC_DATE);
+    }
+
+    /**
+     * Returns formatted date according to system locale
+     *
+     * @param context
+     * @param millis
+     *
+     * @return formatted date or empty string in case of failure
+     */
+    public static String getFormattedJustDate(Context context, long millis)
+    {
+        if (checkNull(context) || millis < 0) {
+            return "";
+        }
+
+        return DateUtils.formatDateTime(context, millis, DateUtils.FORMAT_SHOW_YEAR | DateUtils.FORMAT_NUMERIC_DATE);
+    }
+
+    /**
+     * Returns formatted date (just day and month) according to system locale
+     *
+     * @param context
+     * @param date
+     *
+     * @return formatted date or empty string in case of failure
+     */
+    public static String getFormattedJustDateDayAndMonth(Context context, Date date)
+    {
+        if (checkNull(context) || checkNull(date)) {
+            return "";
+        }
+
+        return DateUtils.formatDateTime(context, date.getTime(), DateUtils.FORMAT_SHOW_DATE);
+    }
+
+    /**
+     * Returns formatted date (just day and month) according to system locale
+     *
+     * @param context
+     * @param millis
+     *
+     * @return formatted date or empty string in case of failure
+     */
+    public static String getFormattedJustDateDayAndMonth(Context context, long millis)
+    {
+        if (checkNull(context) || millis < 0) {
+            return "";
+        }
+
+        return DateUtils.formatDateTime(context, millis, DateUtils.FORMAT_SHOW_DATE);
     }
 
     /**
@@ -142,7 +280,7 @@ public class DateTimeUtils extends Utils {
      *
      * @return formatted date or empty string in case of failure
      */
-    public static String getFormattedJustDateInWordsWithSystemLocale(Context context, Date date)
+    public static String getFormattedJustDateInWords(Context context, Date date)
     {
         if (checkNull(context) || checkNull(date)) {
             return "";
@@ -155,12 +293,29 @@ public class DateTimeUtils extends Utils {
      * Returns formatted date in words according to system locale
      *
      * @param context
+     * @param millis
+     *
+     * @return formatted date or empty string in case of failure
+     */
+    public static String getFormattedJustDateInWords(Context context, long millis)
+    {
+        if (checkNull(context) || millis < 0) {
+            return "";
+        }
+
+        return DateUtils.formatDateTime(context, millis, DateUtils.FORMAT_SHOW_YEAR);
+    }
+
+    /**
+     * Returns formatted date in words according to system locale
+     *
+     * @param context
      * @param dateStart
      * @param dateEnd
      *
      * @return formatted date and time interval or empty string in case of failure
      */
-    public static String getFormattedDateAndTimeIntervalWithSystemLocale(Context context, Date dateStart, Date dateEnd)
+    public static String getFormattedDateAndTimeInterval(Context context, Date dateStart, Date dateEnd)
     {
         if (checkNull(context) || checkNull(dateStart) || checkNull(dateEnd)) {
             return "";
@@ -184,18 +339,32 @@ public class DateTimeUtils extends Utils {
 
         String resultDate = "";
         if (startDateInMillis == endDateInMillis) {
-            resultDate += getFormattedJustDateWithSystemLocale(context, dateStart);
+            resultDate += getFormattedJustDate(context, dateStart);
             resultDate += " ";
-            resultDate += getFormattedJustTimeWithSystemLocale(context, dateStart);
+            resultDate += getFormattedJustTime(context, dateStart);
             resultDate += " - ";
-            resultDate += getFormattedJustTimeWithSystemLocale(context, dateEnd);
+            resultDate += getFormattedJustTime(context, dateEnd);
         } else {
-            resultDate += getFormattedDateAndTimeWithSystemLocale(context, dateStart);
+            resultDate += getFormattedDateAndTime(context, dateStart);
             resultDate += " - ";
-            resultDate += getFormattedDateAndTimeWithSystemLocale(context, dateEnd);
+            resultDate += getFormattedDateAndTime(context, dateEnd);
         }
 
         return resultDate;
+    }
+
+    /**
+     * Returns formatted date in words according to system locale
+     *
+     * @param context
+     * @param millisStart
+     * @param millisEnd
+     *
+     * @return formatted date and time interval or empty string in case of failure
+     */
+    public static String getFormattedDateAndTimeInterval(Context context, long millisStart, long millisEnd)
+    {
+        return getFormattedDateAndTimeInterval(context, millisStart, millisEnd);
     }
 
     /**
@@ -212,7 +381,7 @@ public class DateTimeUtils extends Utils {
             return "";
         }
 
-        StringBuilder builder = new StringBuilder("");
+        StringBuilder builder = new StringBuilder();
         final long hr = TimeUnit.MILLISECONDS.toHours(milliseconds);
         final long min = TimeUnit.MILLISECONDS.toMinutes(milliseconds) % 60;
         final long sec = TimeUnit.MILLISECONDS.toSeconds(milliseconds) % 60;
@@ -235,5 +404,22 @@ public class DateTimeUtils extends Utils {
         }
 
         return builder.toString();
+    }
+
+    /**
+     * Returns formatted time duration
+     *
+     * @param context
+     * @param time
+     *
+     * @return formatted time duration or empty string in case of failure
+     */
+    public static String getFormattedTimeDuration(Context context, Date time, boolean withMilliseconds)
+    {
+        if (checkNull(context) || checkNull(time)) {
+            return "";
+        }
+
+        return getFormattedTimeDuration(context, time.getTime(), withMilliseconds);
     }
 }

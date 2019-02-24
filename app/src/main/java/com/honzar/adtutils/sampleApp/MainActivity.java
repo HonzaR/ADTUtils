@@ -2,8 +2,9 @@ package com.honzar.adtutils.sampleApp;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
-import com.honzar.adtutils.library.IntentUtils;
+import com.honzar.adtutils.library.DateTimeUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,12 +24,12 @@ public class MainActivity extends AppCompatActivity {
 //        LogUtils.d(com.honzar.adtutils.sampleApp.BuildConfig.DEBUG, MainActivity.class.getName(), "test navigation bar height: " + ViewUtils.getSystemNavigationBarHeight(MainActivity.this));
 //        LogUtils.d(com.honzar.adtutils.sampleApp.BuildConfig.DEBUG, MainActivity.class.getName(), "test status bar height: " + ViewUtils.getSystemStatusBarHeight(MainActivity.this));
 //
-//        LogUtils.d(true, "test", DateTimeUtils.getFormattedDateAndTimeInWordsWithSystemLocale(MainActivity.this, new Date()));
+//        LogUtils.d(true, "test", DateTimeUtils.getFormattedDateAndTimeInWords(MainActivity.this, new Date()));
 //
 //        ViewUtils.keepScreenOn(MainActivity.this, true);
 //
-//        LogUtils.d(true, "TEST DATE RANGE", DateTimeUtils.getFormattedDateAndTimeIntervalWithSystemLocale(MainActivity.this, 	new Date(1509959820000L), new Date(1510136220000L)));
-//        LogUtils.d(true, "TEST DATE RANGE", DateTimeUtils.getFormattedDateAndTimeIntervalWithSystemLocale(MainActivity.this, 	new Date(1509963420000L), new Date(1509992820000L)));
+//        LogUtils.d(true, "TEST DATE RANGE", DateTimeUtils.getFormattedDateAndTimeInterval(MainActivity.this, 	new Date(1509959820000L), new Date(1510136220000L)));
+//        LogUtils.d(true, "TEST DATE RANGE", DateTimeUtils.getFormattedDateAndTimeInterval(MainActivity.this, 	new Date(1509963420000L), new Date(1509992820000L)));
 //
 //        LogUtils.d(true, "TEST TIME DURATION", DateTimeUtils.getFormattedTimeDuration(MainActivity.this, 1510515505193L, true));
 //        LogUtils.d(true, "TEST TIME DURATION", DateTimeUtils.getFormattedTimeDuration(MainActivity.this, 1510515505193L, false));
@@ -57,7 +58,9 @@ public class MainActivity extends AppCompatActivity {
 //    File file;
 
 
-        IntentUtils.openAppPlayStoreSubscriptions(MainActivity.this);
+        //IntentUtils.openAppPlayStoreSubscriptions(MainActivity.this);
+
+        Toast.makeText(this, DateTimeUtils.getFormattedJustDateDayAndMonth(this, System.currentTimeMillis()), Toast.LENGTH_SHORT).show();
 
     }
 
