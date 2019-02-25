@@ -91,7 +91,7 @@ public class DateTimeUtils extends Utils {
      *
      * @return ISO 8601 String or current date ISO String in case of error
      */
-    public static String encodeMillisToIsoString(Date date)
+    public static String encodeDateToIsoString(Date date)
     {
         if (date == null) {
             return simpleISO8601DateFormatter.format(System.currentTimeMillis());

@@ -1,6 +1,7 @@
 package com.honzar.adtutils.library;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -12,10 +13,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+
+import static android.content.Context.BATTERY_SERVICE;
 
 /**
  * Created by Honza Rychnovský on 20.4.2017.
@@ -291,6 +296,63 @@ public class DeviceUtils extends Utils {
         } catch (PackageManager.NameNotFoundException e) {}
 
         return false;
+    }
+
+    /**
+     * Checks if device battery is low. Requires API level 21 at least.
+     *
+     * @param context
+     * @param lowBatteryPercentageBound
+     *
+     * @return true/false
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public static boolean checkBatteryIsLow(Context context, int lowBatteryPercentageBound)
+    {
+        if (checkNull(context))
+            return false;
+
+        BatteryManager batteryManager = (BatteryManager) context.getSystemService(BATTERY_SERVICE);
+
+        if (batteryManager == null)
+            return false;
+
+        int batLevel = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+        boolean charging = false;
+
+        if (VersionUtils.isThisDeviceOreoOrHigher()) {
+            int status = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS);
+
+            charging = status == BatteryManager.BATTERY_STATUS_CHARGING ||
+                    status == BatteryManager.BATTERY_STATUS_FULL;
+        }
+
+        lowBatteryPercentageBound = (lowBatteryPercentageBound < 0 || lowBatteryPercentageBound > 100) ? 15 : lowBatteryPercentageBound;
+
+        return !charging && (batLevel <= lowBatteryPercentageBound);
+    }
+
+    /**
+     * Checks if device is running low on ram memory.
+     *
+     * @param context
+     *
+     * @return true/false
+     */
+    public static boolean checkMemoryIsLow(Context context)
+    {
+        if (checkNull(context))
+            return false;
+
+        ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+
+        if (activityManager == null)
+            return false;
+
+        activityManager.getMemoryInfo(mi);
+
+        return mi.lowMemory;
     }
 
 
