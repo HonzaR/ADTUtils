@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class DateTimeUtils extends Utils {
 
     private static SimpleDateFormat simpleISO8601DateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
-    private static SimpleDateFormat simpleISO8601DateWithMillisFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.getDefault());
+    private static SimpleDateFormat simpleISO8601DateWithMillisFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
 
 
     // DECODE & ENCODE
