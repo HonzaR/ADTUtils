@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
         //IntentUtils.openAppPlayStoreSubscriptions(MainActivity.this);
 
-        Toast.makeText(this, DateTimeUtils.getFormattedJustDateDayAndMonth(this, System.currentTimeMillis()), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, DateTimeUtils.getFormattedTimeDuration(this, System.currentTimeMillis(), false), Toast.LENGTH_SHORT).show();
 
     }
 

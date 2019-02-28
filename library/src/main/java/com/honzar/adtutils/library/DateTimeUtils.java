@@ -396,7 +396,7 @@ public class DateTimeUtils extends Utils {
             builder.append(":");
         }
         if (sec > 0) {
-            builder.append(sec);
+            builder.append(String.format(Locale.getDefault(), "%02d", sec));
             builder.append(withMilliseconds ? "." : "");
         }
         if (withMilliseconds && millis > 0) {
