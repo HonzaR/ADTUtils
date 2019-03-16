@@ -545,6 +545,36 @@ public class IntentUtils extends Utils {
         return true;
     }
 
+    /**
+     * Opens chooser window to share app details by other app.
+     *
+     * @param context
+     *
+     * @return true/false
+     */
+    public static boolean shareApp(Context context, String chooserText, String subject, String body, String link)
+    {
+        if (checkNull(context))
+            return false;
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        String shareBodyText = body + "\n\n" + link;
+
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareBodyText);
+
+        try {
+            context.startActivity(Intent.createChooser(shareIntent, chooserText));
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+
     //
     // TURN DEVICE ACCESSORY ON
     //

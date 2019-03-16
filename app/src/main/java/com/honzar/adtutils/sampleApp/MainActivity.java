@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.honzar.adtutils.library.DateTimeUtils;
+import com.honzar.adtutils.library.IntentUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -60,9 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
         //IntentUtils.openAppPlayStoreSubscriptions(MainActivity.this);
 
-        Toast.makeText(this, DateTimeUtils.getFormattedTimeDuration(this, System.currentTimeMillis(), false), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, DateTimeUtils.getFormattedTimeDuration(this, System.currentTimeMillis(), false), Toast.LENGTH_SHORT).show();
 
-    }
+        IntentUtils.shareApp(this, "choooooser", "subjectttt", "bodyyyyy", "www.link.com");
+
+     }
 
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -75,4 +78,5 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        }
 //    }
+
 }
