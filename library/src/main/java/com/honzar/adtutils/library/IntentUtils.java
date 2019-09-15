@@ -815,6 +815,50 @@ public class IntentUtils extends Utils {
         context.startActivity(facebookIntent);
     }
 
+    // TWITTER
+
+    public static void openTwitterPage(Context context, String pageOrUserId)
+    {
+        String twitterWebPageUrl = "https://twitter.com/" + pageOrUserId;
+        Intent appIntent;
+
+        if (!checkAppInstalled(context, "com.twitter.android")) {
+            appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(twitterWebPageUrl));
+
+        } else {
+            try {
+                context.getPackageManager().getPackageInfo("com.twitter.android", 0);
+                appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=" + pageOrUserId));
+                appIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            } catch (PackageManager.NameNotFoundException e) {
+                appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(twitterWebPageUrl));
+            }
+        }
+        context.startActivity(appIntent);
+    }
+
+    // INSTAGRAM
+
+    public static void openInstagramUser(Context context, String userId)
+    {
+        String instagramWebPageUrl = "https://instagram.com/" + userId;
+        Intent appIntent;
+
+        if (!checkAppInstalled(context, "com.instagram.android")) {
+            appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(instagramWebPageUrl));
+
+        } else {
+            try {
+                context.getPackageManager().getPackageInfo("com.instagram.android", 0);
+                appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://instagram.com/_u/" + userId));
+                appIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            } catch (PackageManager.NameNotFoundException e) {
+                appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(instagramWebPageUrl));
+            }
+        }
+        context.startActivity(appIntent);
+    }
+
     public static boolean checkAppInstalled(Context context, String uri)
     {
         PackageManager pm = context.getPackageManager();
