@@ -8,6 +8,7 @@ import android.content.ActivityNotFoundException;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
@@ -19,6 +20,7 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.util.Patterns;
 
 import java.io.File;
@@ -733,5 +735,95 @@ public class IntentUtils extends Utils {
         } catch (ActivityNotFoundException e) {
             return false;
         }
+    }
+
+    // YOUTUBE
+
+    public static void openYoutubeVideo(Context context, String id)
+    {
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
+        Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("http://www.youtube.com/watch?v=" + id));
+        try {
+            context.startActivity(appIntent);
+        } catch (ActivityNotFoundException ex) {
+            context.startActivity(webIntent);
+        }
+    }
+
+    public static void openYoutubeChannel(Context context, String channelId)
+    {
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube.com/channel/" + channelId));
+        Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("https://www.youtube.com/channel/" + channelId));
+        try {
+            context.startActivity(appIntent);
+        } catch (ActivityNotFoundException ex) {
+            context.startActivity(webIntent);
+        }
+    }
+
+    public static void openYoutubeUser(Context context, String userId)
+    {
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube.com/user/" + userId));
+        Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("https://www.youtube.com/user/" + userId));
+        try {
+            context.startActivity(appIntent);
+        } catch (ActivityNotFoundException ex) {
+            context.startActivity(webIntent);
+        }
+    }
+
+    // FACEBOOK
+
+    /**
+     * Opens native facebook app, if installed, webpage otherwise.
+     *
+     * Usages: "fb://page/" - does not work with newer versions of the FB app.
+     *         "fb://facewebmodal/f?href=" - for newer versions.
+     *
+     * @param context
+     * @param pageId
+     */
+    public static void openFacebookPage(Context context, String pageId)
+    {
+        String facebookWebPageUrl = "https://www.facebook.com/" + pageId;
+        Intent facebookIntent;
+
+        if (!checkAppInstalled(context, "com.facebook.katana")) {
+            facebookIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(facebookWebPageUrl));
+
+        } else {
+            PackageManager packageManager = context.getPackageManager();
+
+            try {
+                ApplicationInfo applicationInfo = packageManager.getApplicationInfo("com.facebook.katana", 0);
+
+                //newer versions of fb app
+                if (applicationInfo.enabled) {
+                    facebookIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://facewebmodal/f?href=" + facebookWebPageUrl));
+                    //older versions of fb app
+                } else {
+                    facebookIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/" + pageId));
+                }
+
+            } catch (PackageManager.NameNotFoundException e) {
+                facebookIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(facebookWebPageUrl));
+            }
+        }
+        context.startActivity(facebookIntent);
+    }
+
+    public static boolean checkAppInstalled(Context context, String uri)
+    {
+        PackageManager pm = context.getPackageManager();
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch(PackageManager.NameNotFoundException e) {
+            Log.e("Facebook", "IntentUtils - appInstalled() - not found!");
+        }
+        return false;
     }
 }
