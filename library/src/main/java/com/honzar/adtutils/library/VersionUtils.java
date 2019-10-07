@@ -90,6 +90,16 @@ public class VersionUtils extends Utils {
     }
 
     /**
+     * Checks if this device is Android 10 or higher
+     *
+     * @return true/false
+     */
+    public static boolean isThisDeviceAndroid10OrHigher()
+    {
+        return Build.VERSION.SDK_INT >= 29;
+    }
+
+    /**
      * Returns this device SDK version
      *
      * @return SDK version
