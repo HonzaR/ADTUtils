@@ -870,4 +870,20 @@ public class IntentUtils extends Utils {
         }
         return false;
     }
+
+    public static void openAppSystemSettingsDetailScreen(Activity activity)
+    {
+        if (activity == null)
+            return;
+
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.setData(Uri.parse("package:" + activity.getPackageName()));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+
+        activity.startActivity(intent);
+    }
 }
