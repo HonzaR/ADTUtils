@@ -18,6 +18,7 @@ import android.provider.CalendarContract;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
@@ -183,6 +184,21 @@ public class IntentUtils extends Utils {
      */
     public static boolean openCameraAppForPhoto(Context context, int requestCode, boolean frontCamera, File outputFile, boolean addToGallery)
     {
+        return openCameraAppForPhoto(context, null, requestCode, frontCamera, outputFile, addToGallery);
+    }
+
+    /**
+     * Opens camera app for photo and returns taken photo file in fragment onActivityResult method
+     *
+     * @param context
+     * @param fragment
+     * @param requestCode
+     * @param frontCamera
+     * @param outputFile
+     *
+     * @return true if succeed, false otherwise
+     */
+    public static boolean openCameraAppForPhoto(Context context, Fragment fragment, int requestCode, boolean frontCamera, File outputFile, boolean addToGallery) {
         if (context == null || outputFile == null) {
             return false;
         }
@@ -215,7 +231,13 @@ public class IntentUtils extends Utils {
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outputFile));
                     }
                 }
-                ((Activity)context).startActivityForResult(takePictureIntent, requestCode);
+
+                if (fragment != null) {
+                    fragment.startActivityForResult(takePictureIntent, requestCode);
+                } else {
+                    ((Activity)context).startActivityForResult(takePictureIntent, requestCode);
+                }
+
                 return true;
             }
         } catch (Exception e) {
@@ -231,10 +253,28 @@ public class IntentUtils extends Utils {
      * @param requestCode
      * @param frontCamera
      * @param outputFile
+     * @param addToGallery
      *
      * @return true if succeed, false otherwise
      */
     public static boolean openCameraAppForVideo(Context context, int requestCode, boolean frontCamera, File outputFile, boolean addToGallery)
+    {
+        return openCameraAppForVideo(context, null, requestCode, frontCamera, outputFile, addToGallery);
+    }
+
+    /**
+     * Opens camera app for video and returns taken video file in fragment onActivityResult method
+     *
+     * @param context
+     * @param fragment
+     * @param requestCode
+     * @param frontCamera
+     * @param outputFile
+     * @param addToGallery
+     *
+     * @return true if succeed, false otherwise
+     */
+    public static boolean openCameraAppForVideo(Context context, Fragment fragment, int requestCode, boolean frontCamera, File outputFile, boolean addToGallery)
     {
         if (context == null || outputFile == null) {
             return false;
@@ -269,7 +309,12 @@ public class IntentUtils extends Utils {
                     }
                 }
 
-                ((Activity)context).startActivityForResult(takeVideoIntent, requestCode);
+                if (fragment != null) {
+                    fragment.startActivityForResult(takeVideoIntent, requestCode);
+                } else {
+                    ((Activity)context).startActivityForResult(takeVideoIntent, requestCode);
+                }
+
                 return true;
             }
         } catch (Exception e) {
@@ -400,6 +445,21 @@ public class IntentUtils extends Utils {
      */
     public static boolean openFilePickerComponent(Context context, String fileType, String chooserTitle, int resultCode)
     {
+        return openFilePickerComponent(context, null, fileType, chooserTitle, resultCode);
+    }
+
+    /**
+     * Opens file picker app and returns chosen file in fragment onActivityResult method
+     *
+     * @param context
+     * @param fileType
+     * @param chooserTitle
+     * @param resultCode
+     *
+     * @return true if succeed, false otherwise
+     */
+    public static boolean openFilePickerComponent(Context context, Fragment fragment, String fileType, String chooserTitle, int resultCode)
+    {
         if (context == null || fileType == null) {
             return false;
         }
@@ -409,7 +469,13 @@ public class IntentUtils extends Utils {
             intent.setType(fileType);
             intent.setAction(Intent.ACTION_GET_CONTENT);
             intent = Intent.createChooser(intent, chooserTitle);
-            ((Activity) context).startActivityForResult(intent, resultCode);
+
+            if (fragment != null) {
+                fragment.startActivityForResult(intent, resultCode);
+            } else {
+                ((Activity) context).startActivityForResult(intent, resultCode);
+            }
+
             return true;
         } catch (Exception e) {
             return false;
@@ -633,6 +699,20 @@ public class IntentUtils extends Utils {
      */
     public static boolean turnBluetoothOn(Context context, int requestCode)
     {
+        return turnBluetoothOn(context, null, requestCode);
+    }
+
+    /**
+     * Turns Bluetooth accessory on and returns result in fragment onActivityResult method
+     *
+     * @param context
+     * @param fragment
+     * @param requestCode
+     *
+     * @return true if succeed, false otherwise
+     */
+    public static boolean turnBluetoothOn(Context context, Fragment fragment, int requestCode)
+    {
         if (context == null) {
             return false;
         }
@@ -644,7 +724,12 @@ public class IntentUtils extends Utils {
         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 
         try {
-            ((Activity)context).startActivityForResult(enableBtIntent, requestCode);
+            if (fragment != null) {
+                fragment.startActivityForResult(enableBtIntent, requestCode);
+            } else {
+                ((Activity)context).startActivityForResult(enableBtIntent, requestCode);
+            }
+
             return true;
         } catch (Exception e) {
             return false;
