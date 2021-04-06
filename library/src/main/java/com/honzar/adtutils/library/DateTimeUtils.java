@@ -1,6 +1,7 @@
 package com.honzar.adtutils.library;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import java.text.ParseException;
@@ -36,7 +37,7 @@ public class DateTimeUtils extends Utils {
             return new Date();
         }
 
-        return decodeDateFromString(ISO_8601_DATE_PATTERN, dateStr);
+        return decodeDateFromString(dateStr, ISO_8601_DATE_PATTERN);
     }
 
     /**
@@ -52,7 +53,7 @@ public class DateTimeUtils extends Utils {
             return new Date();
         }
 
-        return decodeDateFromString(ISO_8601_DATE_WITH_MILLIS_PATTERN, dateStr);
+        return decodeDateFromString(dateStr, ISO_8601_DATE_WITH_MILLIS_PATTERN);
     }
 
     /**
@@ -61,10 +62,15 @@ public class DateTimeUtils extends Utils {
      * @param dateStr
      * @param pattern
      *
-     * @return Date object parsed from date string or current date in case of error
+     * @return Date object parsed from date string, current date in case of formatting error or
+     * null in case of input error
      */
     public static Date decodeDateFromString(String dateStr, String pattern)
     {
+        if (TextUtils.isEmpty(dateStr) || TextUtils.isEmpty(pattern)) {
+            return null;
+        }
+
         SimpleDateFormat formatter = new SimpleDateFormat(pattern, Locale.getDefault());
 
         try {
@@ -112,10 +118,15 @@ public class DateTimeUtils extends Utils {
      * @param date
      * @param pattern
      *
-     * @return String or current date String in case of error
+     * @return String, current date String in case of formatting error or null in case of input error
      */
     public static String encodeDateToString(Date date, String pattern)
     {
+        if (date == null || TextUtils.isEmpty(pattern))
+        {
+            return null;
+        }
+
         SimpleDateFormat formatter = new SimpleDateFormat(pattern, Locale.getDefault());
 
         try {
