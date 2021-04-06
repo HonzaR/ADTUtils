@@ -36,7 +36,7 @@ public class DateTimeUtils extends Utils {
             return new Date();
         }
 
-        return parseStringToDate(ISO_8601_DATE_PATTERN, dateStr);
+        return decodeDateFromString(ISO_8601_DATE_PATTERN, dateStr);
     }
 
     /**
@@ -52,7 +52,26 @@ public class DateTimeUtils extends Utils {
             return new Date();
         }
 
-        return parseStringToDate(ISO_8601_DATE_WITH_MILLIS_PATTERN, dateStr);
+        return decodeDateFromString(ISO_8601_DATE_WITH_MILLIS_PATTERN, dateStr);
+    }
+
+    /**
+     * Parses date string according to pattern.
+     *
+     * @param dateStr
+     * @param pattern
+     *
+     * @return Date object parsed from date string or current date in case of error
+     */
+    public static Date decodeDateFromString(String dateStr, String pattern)
+    {
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern, Locale.getDefault());
+
+        try {
+            return formatter.parse(dateStr);
+        } catch (ParseException e) {
+            return new Date(System.currentTimeMillis());
+        }
     }
 
     /**
@@ -65,10 +84,10 @@ public class DateTimeUtils extends Utils {
     public static String encodeMillisToIsoString(long millis)
     {
         if (millis < 0) {
-            return formatDateToString(new Date(), ISO_8601_DATE_PATTERN);
+            return encodeDateToString(new Date(), ISO_8601_DATE_PATTERN);
         }
 
-        return formatDateToString(new Date(millis), ISO_8601_DATE_PATTERN);
+        return encodeDateToString(new Date(millis), ISO_8601_DATE_PATTERN);
     }
 
     /**
@@ -81,11 +100,32 @@ public class DateTimeUtils extends Utils {
     public static String encodeDateToIsoString(Date date)
     {
         if (date == null) {
-            return formatDateToString(new Date(), ISO_8601_DATE_PATTERN);
+            return encodeDateToString(new Date(), ISO_8601_DATE_PATTERN);
         }
 
         return encodeMillisToIsoString(date.getTime());
     }
+
+    /**
+     * Formats date according to pattern.
+     *
+     * @param date
+     * @param pattern
+     *
+     * @return String or current date String in case of error
+     */
+    public static String encodeDateToString(Date date, String pattern)
+    {
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern, Locale.getDefault());
+
+        try {
+            return formatter.format(date.getTime());
+        } catch (IllegalArgumentException e) {
+            return formatter.format(new Date());
+        }
+    }
+
+
 
     // DATE AND TIME
 
@@ -408,43 +448,5 @@ public class DateTimeUtils extends Utils {
         }
 
         return getFormattedTimeDuration(context, time.getTime(), withMilliseconds);
-    }
-
-    /**
-     * Formats date according to pattern.
-     *
-     * @param date
-     * @param pattern
-     *
-     * @return String or current date String in case of error
-     */
-    private static String formatDateToString(Date date, String pattern)
-    {
-        SimpleDateFormat formatter = new SimpleDateFormat(pattern, Locale.getDefault());
-
-        try {
-            return formatter.format(date.getTime());
-        } catch (IllegalArgumentException e) {
-            return formatter.format(new Date());
-        }
-    }
-
-    /**
-     * Parses date string according to pattern.
-     *
-     * @param date
-     * @param pattern
-     *
-     * @return Date object parsed from date string or current date in case of error
-     */
-    private static Date parseStringToDate(String date, String pattern)
-    {
-        SimpleDateFormat formatter = new SimpleDateFormat(pattern, Locale.getDefault());
-
-        try {
-            return formatter.parse(date);
-        } catch (ParseException e) {
-            return new Date(System.currentTimeMillis());
-        }
     }
 }
