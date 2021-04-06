@@ -18,9 +18,8 @@ import java.util.concurrent.TimeUnit;
 
 public class DateTimeUtils extends Utils {
 
-    private static SimpleDateFormat simpleISO8601DateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
-    private static SimpleDateFormat simpleISO8601DateWithMillisFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-
+    private static final String ISO_8601_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
+    private static final String ISO_8601_DATE_WITH_MILLIS_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
     // DECODE & ENCODE
 
@@ -37,11 +36,7 @@ public class DateTimeUtils extends Utils {
             return new Date();
         }
 
-        try {
-            return simpleISO8601DateFormatter.parse(dateStr);
-        } catch (ParseException ex) {
-            return new Date();
-        }
+        return parseStringToDate(ISO_8601_DATE_PATTERN, dateStr);
     }
 
     /**
@@ -57,11 +52,7 @@ public class DateTimeUtils extends Utils {
             return new Date();
         }
 
-        try {
-            return simpleISO8601DateWithMillisFormatter.parse(dateStr);
-        } catch (ParseException ex) {
-            return new Date();
-        }
+        return parseStringToDate(ISO_8601_DATE_WITH_MILLIS_PATTERN, dateStr);
     }
 
     /**
@@ -74,14 +65,10 @@ public class DateTimeUtils extends Utils {
     public static String encodeMillisToIsoString(long millis)
     {
         if (millis < 0) {
-            return simpleISO8601DateFormatter.format(System.currentTimeMillis());
+            return formatDateToString(new Date(), ISO_8601_DATE_PATTERN);
         }
 
-        try {
-            return simpleISO8601DateFormatter.format(millis);
-        } catch(RuntimeException rte) {
-            return simpleISO8601DateFormatter.format(System.currentTimeMillis());
-        }
+        return formatDateToString(new Date(millis), ISO_8601_DATE_PATTERN);
     }
 
     /**
@@ -94,7 +81,7 @@ public class DateTimeUtils extends Utils {
     public static String encodeDateToIsoString(Date date)
     {
         if (date == null) {
-            return simpleISO8601DateFormatter.format(System.currentTimeMillis());
+            return formatDateToString(new Date(), ISO_8601_DATE_PATTERN);
         }
 
         return encodeMillisToIsoString(date.getTime());
@@ -421,5 +408,43 @@ public class DateTimeUtils extends Utils {
         }
 
         return getFormattedTimeDuration(context, time.getTime(), withMilliseconds);
+    }
+
+    /**
+     * Formats date according to pattern.
+     *
+     * @param date
+     * @param pattern
+     *
+     * @return String or current date String in case of error
+     */
+    private static String formatDateToString(Date date, String pattern)
+    {
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern, Locale.getDefault());
+
+        try {
+            return formatter.format(date.getTime());
+        } catch (IllegalArgumentException e) {
+            return formatter.format(new Date());
+        }
+    }
+
+    /**
+     * Parses date string according to pattern.
+     *
+     * @param date
+     * @param pattern
+     *
+     * @return Date object parsed from date string or current date in case of error
+     */
+    private static Date parseStringToDate(String date, String pattern)
+    {
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern, Locale.getDefault());
+
+        try {
+            return formatter.parse(date);
+        } catch (ParseException e) {
+            return new Date(System.currentTimeMillis());
+        }
     }
 }
